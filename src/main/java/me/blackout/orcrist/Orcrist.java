@@ -19,7 +19,7 @@ public class Orcrist implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOG.info("Initializing PvP Assist");
+		LOG.info("Initializing Orcrist");
 
 		// Init global client accessor
 		mc = Minecraft.getInstance();
