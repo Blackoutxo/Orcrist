@@ -3,7 +3,7 @@ package me.blackout.orcrist.systems;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Modules {
+public class  Modules {
     private final static List<Module> modules = new ArrayList<>();
 
     // Add modules function
@@ -16,8 +16,9 @@ public class Modules {
         all();
     }
 
-    // All
-    private void all() {}
+    public static List<Module> all() { return modules; }
+
+    // Combat
 
     // Render
     private void render() {}
