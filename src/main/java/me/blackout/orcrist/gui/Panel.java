@@ -11,13 +11,15 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class panel {
+public class Panel {
     private final int Width = 400, Height = 300;
-    private final int Sidebar_W = 50, Row_h = 25, padding = 4;
+    private final int Sidebar_W = 80, Row_h = 25, padding = 4;
 
     // Colors
+    private final Color ACCENT = new Color(90, 131, 255);
     private final Color BG = new Color(25, 25, 30);
     private final Color SIDEBAR = new Color(30, 30, 38);
+    private final Color HOVER = new Color(133, 121, 121);
     private final Color ENABLED = new Color(78, 67, 96);
     private final Color TEXT = new Color(255, 255, 255);
 
@@ -31,12 +33,13 @@ public class panel {
 
     private Category category = Category.All; // Default category
     private String search = "";
+    private boolean searchFocused;
 
     private final Set<Module> expanded = new HashSet<>();
 
     private record Row(Module module, Setting<?> setting) {}
 
-    public panel(GUI gui, int x, int y) {
+    public Panel(GUI gui, int x, int y) {
         this.gui = gui;
         this.x = x;
         this.y = y;
@@ -73,6 +76,30 @@ public class panel {
 
         Renderer2D.quad(g, x, y, Width, Height, BG);
         Renderer2D.quad(g, x, y, Width, 20, new Color(35, 35, 45));
+        Renderer2D.text(g, "Orcrist", Width / 2, y + 6, TEXT);
+
+        // Sidebar
+        Renderer2D.quad(g, x, y + 20, Sidebar_W, Height - 20, SIDEBAR);
+        int cy = y + 20 + padding;
+
+        for (Category c : Category.values()) {
+            boolean hover = inside(mx, my, x + padding, cy, Sidebar_W - padding * 2, Row_h);
+
+            Renderer2D.quad(g, x + padding, cy, Sidebar_W - padding * 2, Row_h, hover ? HOVER : SIDEBAR);
+
+            if (c == category) Renderer2D.quad(g, x + padding, cy, 2, Row_h, ACCENT);
+            Renderer2D.text(g, c.name, x + padding + 5, cy + 8, c == category ? TEXT : TEXT.darker());
+            cy += Row_h + 2;
+        }
+
+        // search bar
+        int sy = y + 20 + padding;
+        Renderer2D.quad(g, listX(), sy, listW(), 18, searchFocused ? HOVER : new Color(40, 40, 50));
+        String shown = search.isEmpty() && !searchFocused ? "Search........." : search + "_";
+        Renderer2D.text(g, shown, listX() + 4, sy + 5, search.isEmpty() ? TEXT.darker() : TEXT);
+
+        // Rows
+        List<Row> rows = buildRows();
 
     }
 
