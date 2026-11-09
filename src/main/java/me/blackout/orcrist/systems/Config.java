@@ -1,6 +1,8 @@
 package me.blackout.orcrist.systems;
 
 import me.blackout.orcrist.settings.Setting;
+import me.blackout.orcrist.systems.modules.Module;
+import me.blackout.orcrist.systems.modules.Modules;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
