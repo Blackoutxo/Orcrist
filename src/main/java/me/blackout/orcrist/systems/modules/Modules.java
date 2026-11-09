@@ -1,4 +1,4 @@
-package me.blackout.orcrist.systems;
+package me.blackout.orcrist.systems.modules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,4 +25,16 @@ public class  Modules {
 
     // World
     private void world() {}
+
+    // Search find
+    public static List<Module> get(Category category, String search) {
+        String s = search.toLowerCase();
+        List<Module> mod = new ArrayList<>();
+        for (Module m : modules) {
+            if (category != Category.All && m.category != category) continue;
+            if (!s.isEmpty() && !m.name.toLowerCase().contains(s)) continue;
+            mod.add(m);
+        }
+        return mod;
+    }
 }

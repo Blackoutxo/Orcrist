@@ -1,4 +1,4 @@
-package me.blackout.orcrist.systems;
+package me.blackout.orcrist.systems.modules;
 
 import me.blackout.orcrist.Orcrist;
 import me.blackout.orcrist.settings.Setting;
