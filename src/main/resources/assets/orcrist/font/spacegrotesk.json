@@ -2,7 +2,7 @@
   "providers": [
     {
       "type": "ttf",
-      "file": "orcrist:SpaceGrotesk-Regular.ttf",
+      "file": "orcrist:spacegrotesk.ttf",
       "shift": [0, 0],
       "size": 9.0,
       "oversample": 4.0
