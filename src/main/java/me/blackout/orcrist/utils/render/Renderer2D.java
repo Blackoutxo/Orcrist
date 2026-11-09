@@ -19,9 +19,9 @@ import static me.blackout.orcrist.Orcrist.mc;
 public class Renderer2D {
 
     // Text
-    private static Style style = Style.EMPTY.withFont(
+    private static final Style style = Style.EMPTY.withFont(
             FontDescription.CODEC
-                    .parse(JsonOps.INSTANCE, new JsonPrimitive("orcrist:fonts.SpaceGrotesk"))
+                    .parse(JsonOps.INSTANCE, new JsonPrimitive("orcrist:spacegrotesk"))
                     .result()
                     .orElseThrow()
     );
