@@ -1,6 +1,10 @@
 package me.blackout.orcrist.systems;
 
 import me.blackout.orcrist.Orcrist;
+import me.blackout.orcrist.settings.Setting;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Module {
     public final String name;
@@ -8,6 +12,8 @@ public abstract class Module {
     public final Category category;
 
     private boolean enabled;
+
+    private final List<Setting> settings = new ArrayList<>();
 
     public Module(String name, String description, Category category) {
         this.name = name;
@@ -31,4 +37,17 @@ public abstract class Module {
 
     protected void onEnable() {}
     protected void onDisable() {}
+
+    protected <S extends Setting<?>> S add(S setting) {
+        settings.add(setting);
+        return setting;
+    }
+
+    public List<Setting> getSettings() {
+        return settings;
+    }
+
+    public void setEnabled(boolean state) {
+        if (state != enabled) toggle();
+    }
 }
