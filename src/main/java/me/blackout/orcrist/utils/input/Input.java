@@ -12,12 +12,12 @@ import static me.blackout.orcrist.Orcrist.mc;
 public class Input {
     public static void registerKey() {
         KeyMapping.Category CATEGORY = KeyMapping.Category.register(
-                Orcrist.id("pvp_assist")
+                Orcrist.id("orcrist")
         );
 
         KeyMapping openGUIKey = KeyMappingHelper.registerKeyMapping(
                 new KeyMapping(
-                        "key.pvp-assist.open-gui",
+                        "key.orcrist.open-gui",
                         InputConstants.Type.KEYBOARD,
                         InputConstants.KEY_PERIOD,
                         CATEGORY
