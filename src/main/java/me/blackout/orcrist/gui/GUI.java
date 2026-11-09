@@ -11,7 +11,7 @@ import java.awt.*;
 public class GUI extends Screen {
 
     public GUI() {
-        super(Component.literal("PvPAssist"));
+        super(Component.literal("Orcrist"));
     }
 
     @Override
