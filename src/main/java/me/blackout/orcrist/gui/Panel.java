@@ -1,6 +1,8 @@
 package me.blackout.orcrist.gui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.settings.BoolSetting;
+import me.blackout.orcrist.settings.KeybindSetting;
 import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
@@ -37,6 +39,7 @@ public class Panel {
     private boolean searchFocused;
 
     private final Set<Module> expanded = new HashSet<>();
+    private KeybindSetting listener;
 
     private record Row(Module module, Setting<?> setting) {}
 
@@ -169,6 +172,8 @@ public class Panel {
             Row row = rows.get(i);
 
             if (inside(mouseX, mouseY, listX(), ry, listW(), Row_h)) {
+                KeybindSetting prev = listener;
+                listener = null;
                 if (row.setting == null) {
                     if (button == 1) row.module().toggle();
                     if (button == 3 && !row.module().getSettings().isEmpty()) {
@@ -178,7 +183,6 @@ public class Panel {
                     Setting<?> s = row.setting();
 
                     if (s instanceof BoolSetting b) b.toggle();
-
                 } else if (button == 3) {
                     row.setting.reset();
                 }
@@ -186,6 +190,17 @@ public class Panel {
             }
             ry += Row_h + 2;
         }
+        return true;
+    }
+
+    public boolean keyPressed(int key) {
+        if (listener == null) return false;
+
+        if (key == InputConstants.KEY_ESCAPE) {}
+        else if (key == InputConstants.KEY_BACKSPACE || key == InputConstants.KEY_DELETE) listener.set(KeybindSetting.NONE);
+        else listener.set(key);
+
+        listener = null;
         return true;
     }
 
