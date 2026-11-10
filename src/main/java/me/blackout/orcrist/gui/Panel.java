@@ -48,9 +48,9 @@ public class Panel {
 
     // Layout
     private int listX() { return x + Sidebar_W + padding; }
-    private int listY() { return y + 20 + Height + padding; }
+    private int listY() { return y + 38 + padding * 2; }
     private int listW() { return Width - Sidebar_W - padding; }
-    private int visibleRows() { return (y - Height - padding - listY()) / (Row_h + 2); } // No overflow of modules
+    private int visibleRows() { return (y + Height - padding - listY()) / (Row_h + 2); } // No overflow of modules
 
     // Bounds check
     private boolean inside(double mx, double my, int x, int y, int w, int h) {
@@ -77,7 +77,7 @@ public class Panel {
 
         Renderer2D.quad(g, x, y, Width, Height, BG);
         Renderer2D.quad(g, x, y, Width, 20, new Color(35, 35, 45));
-        Renderer2D.text(g, "Orcrist", 200, y + 6, TEXT);
+        Renderer2D.text(g, "Orcrist", x + 200, y + 6, TEXT);
 
         // Sidebar
         Renderer2D.quad(g, x, y + 20, Sidebar_W, Height - 20, SIDEBAR);
@@ -95,7 +95,7 @@ public class Panel {
 
         // search bar
         int sy = y + 20 + padding;
-        Renderer2D.quad(g, listX(), sy, listW(), 18, searchFocused ? HOVER : new Color(40, 40, 50));
+        Renderer2D.quad(g, listX(), sy, listW() - 3, 18, searchFocused ? HOVER : new Color(40, 40, 50));
         String shown = search.isEmpty() && !searchFocused ? "Search........." : search + "_";
         Renderer2D.text(g, shown, listX() + 4, sy + 5, search.isEmpty() ? TEXT.darker() : TEXT);
 
@@ -108,9 +108,8 @@ public class Panel {
         for (int i = scrollRow; i < Math.min(rows.size(), scrollRow + visibleRows()); i++) {
             Row row = rows.get(i);
 
-            // Finish module & settings render
-            if (row.setting == null) renderModuleRow(g, row.module, ry, mx, my);
-            else renderSettingsRow(g, row.setting, ry, mx, my);
+            if (row.setting == null) renderModuleRow(g, row.module(), ry, mx, my);
+            else renderSettingsRow(g, row.setting(), ry, mx, my);
             ry += Row_h + 2;
         }
     }
@@ -118,9 +117,9 @@ public class Panel {
     private void renderModuleRow(GuiGraphicsExtractor g, Module m, int ry, int mx, int my) {
         boolean hover = inside(mx, my, listX(), ry, listW(), Row_h);
 
-        Renderer2D.quad(g, listX(), ry, listW(), Row_h, hover ? HOVER : BG);
+        Renderer2D.quad(g, listX(), ry, listW() - 3, Row_h, hover ? HOVER : BG);
         Renderer2D.quad(g, listX(), ry, 3, Row_h, m.isEnabled() ? ENABLED : BG);
-        Renderer2D.text(g, m.name, listW() / 2, ry + 7, TEXT);
+        Renderer2D.text(g, m.name, x + 200, ry + 7, TEXT);
 
         if (!m.getSettings().isEmpty()) {
             Renderer2D.text(g, expanded.contains(m) ? "v" : ">", listX() + listW() - 12, ry + 6, TEXT);
@@ -131,8 +130,6 @@ public class Panel {
          int rx = listX() + 10, rw = listW() - 10;
          boolean hover = inside(mx, my, rx, ry, rw, Row_h);
          Renderer2D.quad(g, rx, ry, rw, Row_h, hover ? HOVER : BG);
-
-         // Description (Add later)
 
         // Settings
         if (s instanceof BoolSetting b) {
@@ -173,15 +170,16 @@ public class Panel {
 
             if (inside(mouseX, mouseY, listX(), ry, listW(), Row_h)) {
                 if (row.setting == null) {
-                    if (button == 0) row.module.toggle();
-                    if (button == 1 && !row.module.getSettings().isEmpty()) {
-                        if (!expanded.remove(row.module)) expanded.add(row.module);
+                    if (button == 1) row.module().toggle();
+                    if (button == 3 && !row.module().getSettings().isEmpty()) {
+                        if (!expanded.remove(row.module())) expanded.add(row.module());
                     }
-                } else if (button == 0) {
+                } else if (button == 1) {
                     Setting<?> s = row.setting();
 
                     if (s instanceof BoolSetting b) b.toggle();
-                } else if (button == 1) {
+
+                } else if (button == 3) {
                     row.setting.reset();
                 }
                 return true;
@@ -198,5 +196,26 @@ public class Panel {
             scrollRow = 0;
         }
         return true;
+    }
+
+    public void mouseReleased() {
+        dragging = false;
+    }
+
+    public void mouseScrolled(double amount) {
+        scrollRow -= (int) Math.signum(amount);
+    }
+
+    public boolean backSpace() {
+        if (!searchFocused || search.isEmpty()) return false;
+
+        search = search.substring(0, search.length() - 1);
+        scrollRow = 0;
+
+        return true;
+    }
+
+    public boolean isTyping() {
+        return searchFocused;
     }
 }
