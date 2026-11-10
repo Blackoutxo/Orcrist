@@ -9,15 +9,13 @@ public class BoolSetting extends Setting<Boolean> {
 
     @Override
     public void save(CompoundTag tag) {
-
+        tag.putBoolean(name, value);
     }
 
     @Override
     public void load(CompoundTag tag) {
-
+        value = tag.getBooleanOr(name, value);
     }
 
     public void toggle() { value = !value; }
-
-    /**TODO: Add save*/
 }
