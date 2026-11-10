@@ -15,7 +15,7 @@ public abstract class Module {
     private boolean enabled;
 
     private final List<Setting> settings = new ArrayList<>();
-    private final KeybindSetting keyBind = add(new KeybindSetting());
+    public final KeybindSetting keyBind = add(new KeybindSetting());
 
     public Module(String name, String description, Category category) {
         this.name = name;
