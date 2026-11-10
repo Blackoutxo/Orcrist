@@ -1,5 +1,6 @@
 package me.blackout.orcrist.gui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.systems.Config;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -54,6 +55,7 @@ public class GUI extends Screen {
     @Override
     public boolean keyPressed(@NotNull KeyEvent event) {
         if (event.key() == 159 && panel.backSpace()) return true;
+        if (event.key() == InputConstants.KEY_BACKSPACE && panel.backSpace()) return true;
         return super.keyPressed(event);
     }
 
