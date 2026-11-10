@@ -1,6 +1,7 @@
 package me.blackout.orcrist.systems.modules;
 
 import me.blackout.orcrist.Orcrist;
+import me.blackout.orcrist.settings.KeybindSetting;
 import me.blackout.orcrist.settings.Setting;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public abstract class Module {
     private boolean enabled;
 
     private final List<Setting> settings = new ArrayList<>();
+    private final KeybindSetting keyBind = add(new KeybindSetting());
 
     public Module(String name, String description, Category category) {
         this.name = name;
