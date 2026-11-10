@@ -1,7 +1,11 @@
 package me.blackout.orcrist.gui;
 
+import me.blackout.orcrist.systems.Config;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,8 +28,43 @@ public class GUI extends Screen {
     }
 
     @Override
-    public void mouseMoved(double x, double y) {
+    public boolean mouseClicked(@NotNull MouseButtonEvent event, boolean doubleClick) {
+        if (panel.mouseClicked(event.x(), event.y(), event.button())) return true;
+        return super.mouseClicked(event, doubleClick);
+    }
 
-        super.mouseMoved(x, y);
+    @Override
+    public boolean mouseReleased(@NotNull MouseButtonEvent event) {
+        panel.mouseReleased();
+        return super.mouseReleased(event);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        panel.mouseScrolled(scrollY);
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
+    public boolean charTyped(CharacterEvent event) {
+        if (panel.charTyped((char) event.codepoint())) return true;
+        return super.charTyped(event);
+    }
+
+    @Override
+    public boolean keyPressed(@NotNull KeyEvent event) {
+        if (event.key() == 159 && panel.backSpace()) return true;
+        return super.keyPressed(event);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
+    public void removed() {
+        Config.save();
+        super.removed();
     }
 }
