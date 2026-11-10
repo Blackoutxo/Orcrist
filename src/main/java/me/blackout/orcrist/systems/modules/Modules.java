@@ -1,5 +1,7 @@
 package me.blackout.orcrist.systems.modules;
 
+import me.blackout.orcrist.systems.modules.combat.KillAura;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,19 +14,22 @@ public class  Modules {
     }
 
     // Init all modules
-    private void init() {
-        all();
+    public static void init() {
+        combat();
     }
 
     public static List<Module> all() { return modules; }
 
     // Combat
+    private static void combat() {
+        add(new KillAura());
+    }
 
     // Render
-    private void render() {}
+    private static void render() {}
 
     // World
-    private void world() {}
+    private static void world() {}
 
     // Search find
     public static List<Module> get(Category category, String search) {
