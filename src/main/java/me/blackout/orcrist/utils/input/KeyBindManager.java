@@ -24,7 +24,10 @@ public class KeyBindManager {
             boolean pressed = InputConstants.isKeyDown(key);
             boolean wasPressed = down.contains(key);
 
-            if (pressed && canPress && !wasPressed) module.toggle();
+            if (pressed && canPress && !wasPressed) {
+                // ChatUtils toggle off / on message
+                module.toggle();
+            }
 
             if (pressed) down.add(key); else down.remove(key);
         }
