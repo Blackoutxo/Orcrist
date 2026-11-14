@@ -11,7 +11,6 @@ import net.minecraft.nbt.NbtIo;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 public class Config {
     private static final Path DIR = FabricLoader.getInstance().getGameDir().resolve("orcrist");
@@ -30,15 +29,14 @@ public class Config {
             for (Setting<?> s : m.getSettings()) s.save(settings);
             mod.put("Settings", settings);
 
-            root.put(m.name, mod);
+            root.put(m.name, mod); // Contains all states and values
         }
 
         try {
-            Path tmp = File.resolveSibling(File.getFileName() + ".tmp");
-            NbtIo.writeCompressed(root, tmp);
-            Files.move(tmp, File, StandardCopyOption.REPLACE_EXISTING);
+            if (!Files.exists(DIR)) Files.createDirectories(DIR); // Create dir if no dir
+            NbtIo.writeCompressed(root, File); // Write nbt
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
