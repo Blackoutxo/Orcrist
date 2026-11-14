@@ -7,9 +7,9 @@ import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.systems.modules.Modules;
-import me.blackout.orcrist.utils.input.Inputs;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
 
 import java.awt.*;
 import java.util.*;
@@ -142,7 +142,7 @@ public class Panel {
         } else if (s instanceof KeybindSetting k) {
             Renderer2D.text(g, k.name, rx + 6, ry + 6, TEXT);
 
-            String bind = ( listener == k ) ? "...." : Inputs.get(k.get());
+            String bind = ( listener == k ) ? "...." : k.label();
             Renderer2D.text(g, bind, rx + rw - 6 - bind.length() * 6, ry + 6, TEXT);
         }
     }
@@ -207,12 +207,12 @@ public class Panel {
         gui.setTextInput(focus);
     }
 
-    public boolean keyPressed(int key) {
+    public boolean keyPressed(KeyEvent event) {
         if (listener == null) return false;
 
-        if (key == InputConstants.KEY_ESCAPE) {}
-        else if (key == InputConstants.KEY_BACKSPACE || key == InputConstants.KEY_DELETE) listener.set(KeybindSetting.NONE);
-        else listener.set(key);
+        if (event.key() == InputConstants.KEY_ESCAPE);
+        else if (event.key() == InputConstants.KEY_BACKSPACE || event.key() == InputConstants.KEY_DELETE) listener.set(KeybindSetting.NONE);
+        else listener.bind(event);
 
         listener = null;
         return true;

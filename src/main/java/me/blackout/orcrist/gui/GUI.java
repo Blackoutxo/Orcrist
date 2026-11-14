@@ -59,7 +59,7 @@ public class GUI extends Screen {
 
     @Override
     public boolean keyPressed(@NotNull KeyEvent event) {
-        if (panel.keyPressed(event.key())) return true;
+        if (panel.keyPressed(event)) return true;
         if (event.key() == InputConstants.KEY_BACKSPACE && panel.backSpace()) return true;
         return super.keyPressed(event);
     }
