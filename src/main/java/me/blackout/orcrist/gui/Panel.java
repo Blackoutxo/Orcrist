@@ -7,6 +7,7 @@ import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.systems.modules.Modules;
+import me.blackout.orcrist.utils.input.Inputs;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
@@ -138,6 +139,11 @@ public class Panel {
         if (s instanceof BoolSetting b) {
             Renderer2D.text(g, b.name, rx + 6, ry + 6, TEXT);
             Renderer2D.text(g, b.get() ? "On" : "Off", rx + rw - 24, ry + 6, b.get() ? ENABLED : TEXT.darker());
+        } else if (s instanceof KeybindSetting k) {
+            Renderer2D.text(g, k.name, rx + 6, ry + 6, TEXT);
+
+            String bind = ( listener == k ) ? "...." : Inputs.get(k.get());
+            Renderer2D.text(g, bind, rx + rw - 6 - bind.length() * 6, ry + 6, TEXT);
         }
     }
 
@@ -183,6 +189,7 @@ public class Panel {
                     Setting<?> s = row.setting();
 
                     if (s instanceof BoolSetting b) b.toggle();
+                    else if (s instanceof KeybindSetting k) listener = (prev == k) ? null : k;
                 } else if (button == 3) {
                     row.setting.reset();
                 }
