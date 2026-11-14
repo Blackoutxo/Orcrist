@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.systems.modules.Modules;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
