@@ -16,9 +16,5 @@ public class KillAura extends Module {
 
     @EventHandler
     public void onTick() {
-        if (entities.get()) {
-
-        }
-
     }
 }
