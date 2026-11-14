@@ -150,6 +150,7 @@ public class Panel {
     // Input
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!inside(mouseX, mouseY, x, y, Width, Height)) return false;
+        focusSearch(false);
 
         if (inside(mouseX, mouseY, x, y, Width, 20)) {
             dragging = true;
@@ -168,7 +169,7 @@ public class Panel {
             cy += Row_h + 2;
         }
 
-        searchFocused = inside(mouseX, mouseY, listX(), y + 20 + padding, listW(), 18);
+        focusSearch(inside(mouseX, mouseY, listX(), y + 20 + padding, listW(), 18));
         if (searchFocused) return true;
 
         List<Row> rows = buildRows();
@@ -181,16 +182,16 @@ public class Panel {
                 KeybindSetting prev = listener;
                 listener = null;
                 if (row.setting == null) {
-                    if (button == 1) row.module().toggle();
-                    if (button == 3 && !row.module().getSettings().isEmpty()) {
+                    if (button == InputConstants.MOUSE_BUTTON_LEFT) row.module().toggle();
+                    if (button == InputConstants.MOUSE_BUTTON_RIGHT && !row.module().getSettings().isEmpty()) {
                         if (!expanded.remove(row.module())) expanded.add(row.module());
                     }
-                } else if (button == 1) {
+                } else if (button == InputConstants.MOUSE_BUTTON_LEFT) {
                     Setting<?> s = row.setting();
 
                     if (s instanceof BoolSetting b) b.toggle();
                     else if (s instanceof KeybindSetting k) listener = (prev == k) ? null : k;
-                } else if (button == 3) {
+                } else if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
                     row.setting.reset();
                 }
                 return true;
@@ -198,6 +199,12 @@ public class Panel {
             ry += Row_h + 2;
         }
         return true;
+    }
+
+    private void focusSearch(boolean focus) {
+        if (searchFocused == focus) return;
+        searchFocused = focus;
+        gui.setTextInput(focus);
     }
 
     public boolean keyPressed(int key) {
