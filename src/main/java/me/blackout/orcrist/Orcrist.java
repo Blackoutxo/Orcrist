@@ -1,6 +1,7 @@
 package me.blackout.orcrist;
 
 import me.blackout.orcrist.eventBus.EventBus;
+import me.blackout.orcrist.systems.Config;
 import me.blackout.orcrist.systems.modules.Modules;
 import me.blackout.orcrist.utils.Utils;
 import net.fabricmc.api.ModInitializer;
@@ -30,6 +31,9 @@ public class Orcrist implements ModInitializer {
 
 		// Init modules
 		Modules.init();
+
+		// Load config
+		Config.load();
 
 		// Register necessity
 		Utils.register();
