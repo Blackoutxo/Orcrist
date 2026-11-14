@@ -13,8 +13,4 @@ public class KillAura extends Module {
     public KillAura() {
         super("Kill Aura", "Automatically kills entities nearby!", Category.Combat);
     }
-
-    @EventHandler
-    public void onTick() {
-    }
 }
