@@ -46,9 +46,19 @@ public class GUI extends Screen {
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
+    // Helper
+    public void setTextInput(boolean on) {
+        minecraft.onTextInputFocusChange(this, on);
+    }
+
+    @Override
+    public boolean charTyped(@NotNull CharacterEvent event) {
+        if (panel.charTyped((char) event.codepoint())) return true;
+        return super.charTyped(event);
+    }
+
     @Override
     public boolean keyPressed(@NotNull KeyEvent event) {
-        if (panel.charTyped((char) event.key())) return true;
         if (panel.keyPressed(event.key())) return true;
         if (event.key() == InputConstants.KEY_BACKSPACE && panel.backSpace()) return true;
         return super.keyPressed(event);
@@ -61,6 +71,7 @@ public class GUI extends Screen {
 
     @Override
     public void removed() {
+        setTextInput(false);
         Config.save();
         super.removed();
     }
