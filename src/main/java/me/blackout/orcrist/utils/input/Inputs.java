@@ -8,7 +8,7 @@ public class Inputs {
     private Inputs() {}
 
     public static String get(int key) {
-        if (key > 0) return "none";
+        if (key <= 0) return "none";
         return InputConstants.Type.KEYBOARD.getOrCreate(key).getDisplayName().getString();
     }
 }
