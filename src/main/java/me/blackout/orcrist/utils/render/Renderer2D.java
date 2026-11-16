@@ -5,6 +5,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.IdentifierException;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
@@ -17,6 +18,11 @@ import java.awt.*;
 import static me.blackout.orcrist.Orcrist.mc;
 
 public class Renderer2D {
+
+    // Icons
+    private static final Identifier ARROW = Identifier.fromNamespaceAndPath("orcrist", "icons/elements/arrow.png");
+    private static final Identifier CIRCLE = Identifier.fromNamespaceAndPath("orcrist", "icons/elements/circle.png");
+    private static final Identifier TRIANGLE = Identifier.fromNamespaceAndPath("orcrist", "icons/elements/triangle.png");
 
     // Text
     private static final Style style = Style.EMPTY.withFont(
@@ -32,6 +38,33 @@ public class Renderer2D {
 
     public static void text(GuiGraphicsExtractor graphics, String text, int x, int y, Color color) {
         graphics.text(mc.font, styled(text), x, y, color.getRGB());
+    }
+
+    // Texture icon
+    private static void icon(GuiGraphicsExtractor graphics, Identifier tex, int texSize, double x, double y, double size, float rotation, Color color) {
+        graphics.pose().pushMatrix();
+        graphics.pose().translate((float) x, (float) y);
+        graphics.pose().rotate((float) Math.toRadians(rotation));
+        float s = (float) (size / texSize);
+
+        graphics.pose().scale(s, s);
+        graphics.pose().translate(-texSize / 2f, -texSize / 2f);
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, tex, 0, 0, 0, 0, texSize, texSize, texSize, texSize, color.getRGB());
+
+        graphics.pose().popMatrix();
+    }
+
+    public static void arrow(GuiGraphicsExtractor graphics, double x, double y, double size, float rotation, Color color) {
+        icon(graphics, ARROW, 32, x, y, size, rotation, color);
+    }
+
+    public static void circle(GuiGraphicsExtractor graphics, double x, double y, double size, Color color) {
+        icon(graphics, CIRCLE, 64, x, y, size, 0, color);
+    }
+
+    public static void triangle(GuiGraphicsExtractor graphics, double x, double y, double size, float rotation, Color color) {
+        icon(graphics, TRIANGLE, 128, x, y, size, rotation, color);
     }
 
     // Lines
@@ -53,7 +86,35 @@ public class Renderer2D {
         graphics.outline(x, y, width, height, color.getRGB());
     }
 
+    public static void fillWH(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
+        fill(graphics, x, y, x + width, y + height, color);
+    }
+
     public static void fill(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, Color color) {
-        graphics.fill(x1, y1, x2, y2, color.getRGB());
+        int ax = round(Math.min(x1, x2)), ay = round(Math.min(y1, y2));
+        int bx = round(Math.min(x1, x2)), by = round(Math.min(y1, y2));
+        graphics.fill(ax, ay, bx, by, color.getRGB());
+    }
+
+    // Gradients
+    public static void verticalGradient(GuiGraphicsExtractor graphics, double x1, double y1, double x2, double y2, Color topColor, Color bottomColor) {
+        graphics.fillGradient(round(x1), round(y1), round(x1), round(y1), topColor.getRGB(), bottomColor.getRGB());
+    }
+
+    public static void horizontalGradient(GuiGraphicsExtractor graphics, double x1, double y1, double x2, double y2, Color leftColor, Color rightColor) {
+        int left = round(Math.min(x1, x2)), right = round(Math.max(x1, x2));
+        int top = round(Math.min(y1, y2)), bottom = round(Math.max(y1, y2));
+        int w = right - left;
+
+        if (w <= 0) return;
+
+        for (int i = 0; i < w; i++) {
+
+        }
+    }
+
+    // Helpers
+    private static int round(double v) {
+        return (int) Math.round(v);
     }
 }
