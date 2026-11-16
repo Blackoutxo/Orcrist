@@ -1,6 +1,5 @@
 package me.blackout.orcrist.settings;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.utils.input.Inputs;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.nbt.CompoundTag;
