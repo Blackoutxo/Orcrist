@@ -21,7 +21,7 @@ public class Panel {
 
     // Colors
     private final Color ACCENT = new Color(90, 131, 255);
-    private final Color BG = new Color(25, 25, 30);
+    private final Color BG = new Color(24, 24, 24);
     private final Color SIDEBAR = new Color(30, 30, 38);
     private final Color HOVER = new Color(133, 121, 121);
     private final Color ENABLED = new Color(78, 67, 96);
