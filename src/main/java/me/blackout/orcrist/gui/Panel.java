@@ -25,8 +25,9 @@ public class Panel {
     // Colors
     private final Color ACCENT = new Color(90, 131, 255);
     private final Color BG = new Color(24, 24, 24);
+    private final Color MOD_BG = new Color(42, 50, 59);
     private final Color SIDEBAR = new Color(22, 22, 33);
-    private final Color HOVER = new Color(133, 121, 121, 137);
+    private final Color HOVER = new Color(133, 121, 121, 115);
     private final Color ENABLED = new Color(121, 100, 100, 255);
     private final Color TEXT = new Color(255, 255, 255);
 
@@ -83,7 +84,7 @@ public class Panel {
         }
 
         Renderer2D.quadWH(g, x, y + 1, Width, Height, BG);
-        Renderer2D.verticalGradient(g, x + 85, y + 1, x + Width - 2, y + Height - 2, new Color(32, 32, 47), new Color(69, 77, 101));
+        Renderer2D.verticalGradient(g, x + 85, y + 1, x + Width - 2, y + Height - 2, new Color(17, 15, 15), new Color(37, 57, 143));
 
         // Sidebar
         Renderer2D.quadWH(g, x + 2, y + 2, 90, Height - 4, SIDEBAR);
@@ -125,6 +126,7 @@ public class Panel {
 
             if (row.setting == null) renderModuleRow(g, row.module(), ry, mx, my);
             else renderSettingsRow(g, row.setting(), ry, mx, my);
+
             ry += Row_h + 2;
         }
     }
@@ -132,9 +134,10 @@ public class Panel {
     private void renderModuleRow(GuiGraphicsExtractor g, Module m, int ry, int mx, int my) {
         boolean hover = inside(mx, my, listX(), ry, 140, Row_h);
 
-        Renderer2D.quadWH(g, listX(), ry, (int) Utils.animate(0, 140, 2), Row_h, hover ? HOVER : new Color(0, 0, 0, 0));
-        Renderer2D.quadWH(g, listX(), ry, 3,(int) Utils.animate(0, Row_h, 1), m.isEnabled() ? ENABLED : BG);
-        Fonts.get(12).draw(g, m.name, x + 200, ry + 7, TEXT);
+        Renderer2D.quadWH(g, listX(), ry + 2, 140, Row_h, new Color(35, 32, 32));
+        Renderer2D.quadWH(g, listX(), ry, 140, Row_h, hover ? HOVER : BG.brighter());
+        Renderer2D.quadWH(g, listX(), ry, 3, Row_h, m.isEnabled() ? ENABLED : new Color(0, 0, 0, 0));
+        Fonts.get(12).draw(g, m.name, listX() + 25, ry + 2, TEXT);
     }
 
     private void renderSettingsRow(GuiGraphicsExtractor g, Setting<?> s, int ry, int mx, int my) {
@@ -185,7 +188,7 @@ public class Panel {
         for (int i = scrollRow; i < Math.min(rows.size(), scrollRow + visibleRows()); i++) {
             Row row = rows.get(i);
 
-            if (inside(mouseX, mouseY, listX(), ry, listW(), Row_h)) {
+            if (inside(mouseX, mouseY, listX(), ry, 140, Row_h)) {
                 KeybindSetting prev = listener;
                 listener = null;
                 if (row.setting == null) {
