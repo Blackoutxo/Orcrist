@@ -11,18 +11,19 @@ import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 public class Panel {
-    private final int Width = 400, Height = 300;
-    private final int Sidebar_W = 80, Row_h = 25, padding = 4;
+    private final int Width = 400, Height = 250;
+    private final int Sidebar_W = 90, Row_h = 25, padding = 4;
 
     // Colors
     private final Color ACCENT = new Color(90, 131, 255);
     private final Color BG = new Color(24, 24, 24);
-    private final Color SIDEBAR = new Color(30, 30, 38);
+    private final Color SIDEBAR = new Color(22, 22, 33);
     private final Color HOVER = new Color(133, 121, 121);
     private final Color ENABLED = new Color(78, 67, 96);
     private final Color TEXT = new Color(255, 255, 255);
@@ -80,13 +81,10 @@ public class Panel {
         }
 
         Renderer2D.quadWH(g, x, y + 1, Width, Height, BG);
-//        Renderer2D.quadWH(g, x, y, Width, 20, new Color(35, 35, 45));
-
-        Renderer2D.verticalGradient(g, x + 92, y + 1, x + Width - 2, y + Height - 2, new Color(32, 32, 47), new Color(36, 54, 112));
-        Renderer2D.text(g, "Orcrist", x + 200, y + 6, TEXT);
+        Renderer2D.verticalGradient(g, x + 85, y + 1, x + Width - 2, y + Height - 2, new Color(32, 32, 47), new Color(69, 77, 101));
 
         // Sidebar
-        Renderer2D.quadWH(g, x, y + 20, Sidebar_W, Height - 20, SIDEBAR);
+        Renderer2D.quadWH(g, x + 2, y + 2, 90, Height - 4, SIDEBAR);
         int cy = y + 20 + padding;
 
         for (Category c : Category.values()) {
@@ -99,11 +97,20 @@ public class Panel {
             cy += Row_h + 2;
         }
 
+        // Header
+        Renderer2D.quadWH(g, x + 92, y + 3, Width - 92, 28 - 1, new Color(22, 22, 33));
+        Renderer2D.quadWH(g, x + 92, y + 2, Width - 92, 1, new Color(31, 31, 31));
+        Renderer2D.verticalGradient(g, x + 92, y + 28, x + Width - 1, y + 33, new Color(142, 168, 224), new Color(46, 51, 73));
+
+        Renderer2D.quadWH(g, x + 6, y + 3, 80, 0, new Color(74, 79, 101));
+
+        Renderer2D.text(g, "Orcrist", x + 200, y + 6, TEXT);
+
         // search bar
-        int sy = y + 20 + padding;
-        Renderer2D.quadWH(g, listX(), sy, listW() - 3, 18, searchFocused ? HOVER : new Color(40, 40, 50));
-        String shown = search.isEmpty() && !searchFocused ? "Search........." : search + "_";
-        Renderer2D.text(g, shown, listX() + 4, sy + 5, search.isEmpty() ? TEXT.darker() : TEXT);
+//        int sy = y + 30 + padding;
+//        Renderer2D.quadWH(g, listX(), sy, listW() - 3, 18, searchFocused ? HOVER : new Color(40, 40, 50));
+//        String shown = search.isEmpty() && !searchFocused ? "Search........." : search + "_";
+//        Renderer2D.text(g, shown, listX() + 4, sy + 5, search.isEmpty() ? TEXT.darker() : TEXT);
 
         // Rows
         List<Row> rows = buildRows();
@@ -123,7 +130,7 @@ public class Panel {
     private void renderModuleRow(GuiGraphicsExtractor g, Module m, int ry, int mx, int my) {
         boolean hover = inside(mx, my, listX(), ry, listW(), Row_h);
 
-        Renderer2D.quadWH(g, listX(), ry, listW() - 3, Row_h, hover ? HOVER : BG);
+        Renderer2D.quadWH(g, listX(), ry, listW() - 3, Row_h, hover ? HOVER : new Color(0, 0, 0, 0));
         Renderer2D.quadWH(g, listX(), ry, 3, Row_h, m.isEnabled() ? ENABLED : BG);
         Renderer2D.text(g, m.name, x + 200, ry + 7, TEXT);
 
@@ -135,7 +142,7 @@ public class Panel {
     private void renderSettingsRow(GuiGraphicsExtractor g, Setting<?> s, int ry, int mx, int my) {
          int rx = listX() + 10, rw = listW() - 10;
          boolean hover = inside(mx, my, rx, ry, rw, Row_h);
-         Renderer2D.quadWH(g, rx, ry, rw, Row_h, hover ? HOVER : BG);
+         Renderer2D.quadWH(g, rx, ry, rw, Row_h, hover ? HOVER : new Color(0, 0, 0, 0));
 
         // Settings
         if (s instanceof BoolSetting b) {
