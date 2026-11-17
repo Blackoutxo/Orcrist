@@ -1,6 +1,5 @@
 package me.blackout.orcrist.utils.render.text;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
