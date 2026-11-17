@@ -83,7 +83,7 @@ public class Renderer2D {
 
     public static void quad(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, Color color) {
         int ax = round(Math.min(x1, x2)), ay = round(Math.min(y1, y2));
-        int bx = round(Math.min(x1, x2)), by = round(Math.min(y1, y2));
+        int bx = round(Math.max(x1, x2)), by = round(Math.max(y1, y2));
         graphics.fill(ax, ay, bx, by, color.getRGB());
     }
 
