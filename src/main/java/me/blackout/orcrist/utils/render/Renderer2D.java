@@ -77,17 +77,19 @@ public class Renderer2D {
     }
 
     // Quads
-    public static void quad(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
-        fill(graphics, x, y, x + width, y + height, color);
+    public static void quadWH(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
+        quad(graphics, x, y, x + width, y + height, color);
+    }
+
+    public static void quad(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, Color color) {
+        int ax = round(Math.min(x1, x2)), ay = round(Math.min(y1, y2));
+        int bx = round(Math.min(x1, x2)), by = round(Math.min(y1, y2));
+        graphics.fill(ax, ay, bx, by, color.getRGB());
     }
 
     public static void outlinedQuad(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
         fill(graphics, x, y, x + width, y + height, color);
         graphics.outline(x, y, width, height, color.getRGB());
-    }
-
-    public static void fillWH(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
-        fill(graphics, x, y, x + width, y + height, color);
     }
 
     public static void fill(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, Color color) {
@@ -98,7 +100,7 @@ public class Renderer2D {
 
     // Gradients
     public static void verticalGradient(GuiGraphicsExtractor graphics, double x1, double y1, double x2, double y2, Color topColor, Color bottomColor) {
-        graphics.fillGradient(round(x1), round(y1), round(x1), round(y1), topColor.getRGB(), bottomColor.getRGB());
+        graphics.fillGradient(round(x1), round(y1), round(x2), round(y2), topColor.getRGB(), bottomColor.getRGB());
     }
 
     public static void horizontalGradient(GuiGraphicsExtractor graphics, double x1, double y1, double x2, double y2, Color leftColor, Color rightColor) {
@@ -109,12 +111,22 @@ public class Renderer2D {
         if (w <= 0) return;
 
         for (int i = 0; i < w; i++) {
-
+            float t = w == 1 ? 0f : i / (float) (w - 1);
+            graphics.fill(left + i, top, left + i + 1, bottom, lerpColor(leftColor.getRGB(), rightColor.getRGB(), t));
         }
     }
 
     // Helpers
     private static int round(double v) {
         return (int) Math.round(v);
+    }
+
+    private static int lerpColor(int a, int b, float t) {
+        int aa = (a >>> 24) & 255, ar = (a >> 16) & 255, ag = (a >> 8) & 255, ab = a & 255;
+        int ba = (b >>> 24) & 255, br = (b >> 16) & 255, bg = (b >> 8) & 255, bb = b & 255;
+        return ((int) (aa + (ba - aa) * t) << 24)
+                | ((int) (ar + (br - ar) * t) << 16)
+                | ((int) (ag + (bg - ag) * t) << 8)
+                |  (int) (ab + (bb - ab) * t);
     }
 }
