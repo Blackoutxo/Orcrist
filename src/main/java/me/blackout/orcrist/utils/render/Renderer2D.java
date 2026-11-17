@@ -41,7 +41,7 @@ public class Renderer2D {
     }
 
     // Texture icon
-    private static void icon(GuiGraphicsExtractor graphics, Identifier tex, int texSize, double x, double y, double size, float rotation, Color color) {
+    public static void icon(GuiGraphicsExtractor graphics, Identifier tex, int texSize, double x, double y, double size, float rotation, Color color) {
         graphics.pose().pushMatrix();
         graphics.pose().translate((float) x, (float) y);
         graphics.pose().rotate((float) Math.toRadians(rotation));
