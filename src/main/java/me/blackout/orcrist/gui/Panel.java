@@ -79,27 +79,29 @@ public class Panel {
             y = my - dragY;
         }
 
-        Renderer2D.quad(g, x, y, Width, Height, BG);
-        Renderer2D.quad(g, x, y, Width, 20, new Color(35, 35, 45));
+        Renderer2D.quadWH(g, x, y + 1, Width, Height, BG);
+//        Renderer2D.quadWH(g, x, y, Width, 20, new Color(35, 35, 45));
+
+        Renderer2D.verticalGradient(g, x + 92, y + 1, x + Width - 2, y + Height - 2, new Color(32, 32, 47), new Color(36, 54, 112));
         Renderer2D.text(g, "Orcrist", x + 200, y + 6, TEXT);
 
         // Sidebar
-        Renderer2D.quad(g, x, y + 20, Sidebar_W, Height - 20, SIDEBAR);
+        Renderer2D.quadWH(g, x, y + 20, Sidebar_W, Height - 20, SIDEBAR);
         int cy = y + 20 + padding;
 
         for (Category c : Category.values()) {
             boolean hover = inside(mx, my, x + padding, cy, Sidebar_W - padding * 2, Row_h);
 
-            Renderer2D.quad(g, x + padding, cy, Sidebar_W - padding * 2, Row_h, hover ? HOVER : SIDEBAR);
+            Renderer2D.quadWH(g, x + padding, cy, Sidebar_W - padding * 2, Row_h, hover ? HOVER : SIDEBAR);
 
-            if (c == category) Renderer2D.quad(g, x + padding, cy, 2, Row_h, ACCENT);
+            if (c == category) Renderer2D.quadWH(g, x + padding, cy, 2, Row_h, ACCENT);
             Renderer2D.text(g, c.name, x + padding + 5, cy + 8, c == category ? TEXT : TEXT.darker());
             cy += Row_h + 2;
         }
 
         // search bar
         int sy = y + 20 + padding;
-        Renderer2D.quad(g, listX(), sy, listW() - 3, 18, searchFocused ? HOVER : new Color(40, 40, 50));
+        Renderer2D.quadWH(g, listX(), sy, listW() - 3, 18, searchFocused ? HOVER : new Color(40, 40, 50));
         String shown = search.isEmpty() && !searchFocused ? "Search........." : search + "_";
         Renderer2D.text(g, shown, listX() + 4, sy + 5, search.isEmpty() ? TEXT.darker() : TEXT);
 
@@ -121,8 +123,8 @@ public class Panel {
     private void renderModuleRow(GuiGraphicsExtractor g, Module m, int ry, int mx, int my) {
         boolean hover = inside(mx, my, listX(), ry, listW(), Row_h);
 
-        Renderer2D.quad(g, listX(), ry, listW() - 3, Row_h, hover ? HOVER : BG);
-        Renderer2D.quad(g, listX(), ry, 3, Row_h, m.isEnabled() ? ENABLED : BG);
+        Renderer2D.quadWH(g, listX(), ry, listW() - 3, Row_h, hover ? HOVER : BG);
+        Renderer2D.quadWH(g, listX(), ry, 3, Row_h, m.isEnabled() ? ENABLED : BG);
         Renderer2D.text(g, m.name, x + 200, ry + 7, TEXT);
 
         if (!m.getSettings().isEmpty()) {
@@ -133,7 +135,7 @@ public class Panel {
     private void renderSettingsRow(GuiGraphicsExtractor g, Setting<?> s, int ry, int mx, int my) {
          int rx = listX() + 10, rw = listW() - 10;
          boolean hover = inside(mx, my, rx, ry, rw, Row_h);
-         Renderer2D.quad(g, rx, ry, rw, Row_h, hover ? HOVER : BG);
+         Renderer2D.quadWH(g, rx, ry, rw, Row_h, hover ? HOVER : BG);
 
         // Settings
         if (s instanceof BoolSetting b) {
