@@ -1,7 +1,10 @@
 package me.blackout.orcrist.utils.render.text;
 
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 
 import java.awt.*;
@@ -9,8 +12,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static me.blackout.orcrist.Orcrist.mc;
+
 public class GlyphFont {
-    private static final String FONT_PATH = "assets/orcrist/font/spacegrotesk.ttf";
+    private static final String FONT_PATH = "/assets/orcrist/font/spacegrotesk.ttf";
     private static final int SCALE = 2;
     private static final int PAD = 2;
     private static final int FIRST = 32, LAST = 255;
@@ -34,7 +39,7 @@ public class GlyphFont {
     }
 
     public void draw(GuiGraphicsExtractor graphics, String text, int x, int y, Color color) {
-        if (text.isEmpty()) return;
+        if (text.isEmpty() || !ensureReady()) return;
 
         graphics.pose().pushMatrix();
         graphics.pose().translate(x, y);
@@ -62,6 +67,20 @@ public class GlyphFont {
 //    }
 
     // Baking atlas (Better performance than laggy slow rendering)
+    private boolean ensureReady() {
+        if (!attempted) {
+            attempted = true;
+            try {
+                bake();
+                ready = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return ready;
+    }
+
     private void bake() throws Exception {
         Font font = base().deriveFont(Font.PLAIN, (float) size * SCALE);
 
@@ -70,6 +89,50 @@ public class GlyphFont {
         img.setFont(font);
 
         FontMetrics fm = img.getFontMetrics();
+        int ascent = fm.getAscent(), descent = fm.getDescent();
+        img.dispose();
+
+        lineHeight = ascent + descent;
+        cellH = lineHeight + PAD * 2;
+
+        int x = 0, y = 0;
+        for (int c = FIRST; c <= LAST; c++) {
+            adv[c] = fm.charWidth((char) c);
+            cellW[c] = adv[c] + PAD * 2 + 2;
+
+            if (x + cellW[c] > ATLAS_W) { x = 0; y += cellH; }
+
+            u[c] = x;
+            v[c] = y;
+
+            x += cellW[c];
+        }
+
+        atlasH = Integer.highestOneBit(Math.max(1, y + cellH - 1)) << 1;
+
+        BufferedImage bimg = new BufferedImage(ATLAS_W, atlasH, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = bimg.createGraphics();
+        hints(g);
+
+        g.setFont(font);
+        g.setColor(Color.WHITE);
+
+        for (int c = FIRST; c <= LAST; c++) {
+            g.drawString(String.valueOf((char) c), u[c] + PAD, v[c] + PAD + ascent);
+        }
+        g.dispose();
+
+        DynamicTexture tex = new DynamicTexture(() -> "orcrist_font" + size, ATLAS_W, atlasH, false);
+        NativeImage pixel = tex.getPixels();
+
+        for (int py = 0; py < atlasH; py++) {
+            for (int px = 0; px < ATLAS_W; px++) {
+                pixel.setPixel(px, py, bimg.getRGB(px, py));
+            }
+        }
+
+        tex.upload();
+        mc.getTextureManager().register(texId, tex);
     }
 
     private static void hints(Graphics2D g) {
