@@ -7,6 +7,7 @@ import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.systems.modules.Modules;
+import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import me.blackout.orcrist.utils.render.text.Fonts;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -25,8 +26,8 @@ public class Panel {
     private final Color ACCENT = new Color(90, 131, 255);
     private final Color BG = new Color(24, 24, 24);
     private final Color SIDEBAR = new Color(22, 22, 33);
-    private final Color HOVER = new Color(133, 121, 121);
-    private final Color ENABLED = new Color(121, 100, 100);
+    private final Color HOVER = new Color(133, 121, 121, 137);
+    private final Color ENABLED = new Color(121, 100, 100, 255);
     private final Color TEXT = new Color(255, 255, 255);
 
     private final GUI gui;
@@ -129,31 +130,27 @@ public class Panel {
     }
 
     private void renderModuleRow(GuiGraphicsExtractor g, Module m, int ry, int mx, int my) {
-        boolean hover = inside(mx, my, listX(), ry, listW(), Row_h);
+        boolean hover = inside(mx, my, listX(), ry, 140, Row_h);
 
-        Renderer2D.quadWH(g, listX(), ry, listW() - 3, Row_h, hover ? HOVER : new Color(0, 0, 0, 0));
-        Renderer2D.quadWH(g, listX(), ry, 3, Row_h, m.isEnabled() ? ENABLED : BG);
+        Renderer2D.quadWH(g, listX(), ry, (int) Utils.animate(0, 140, 2), Row_h, hover ? HOVER : new Color(0, 0, 0, 0));
+        Renderer2D.quadWH(g, listX(), ry, 3,(int) Utils.animate(0, Row_h, 1), m.isEnabled() ? ENABLED : BG);
         Fonts.get(12).draw(g, m.name, x + 200, ry + 7, TEXT);
-
-        if (!m.getSettings().isEmpty()) {
-            Renderer2D.text(g, expanded.contains(m) ? "v" : ">", listX() + listW() - 12, ry + 6, TEXT);
-        }
     }
 
     private void renderSettingsRow(GuiGraphicsExtractor g, Setting<?> s, int ry, int mx, int my) {
-         int rx = listX() + 10, rw = listW() - 10;
+         int rx = listX() + 140, rw = 140;
          boolean hover = inside(mx, my, rx, ry, rw, Row_h);
          Renderer2D.quadWH(g, rx, ry, rw, Row_h, hover ? HOVER : new Color(0, 0, 0, 0));
 
         // Settings
-        if (s instanceof BoolSetting b) {
-            Fonts.get(9).draw(g, b.name, rx + 6, ry + 6, TEXT);
-            Fonts.get(9).draw(g, b.get() ? "On" : "Off", rx + rw - 24, ry + 6, b.get() ? TEXT : TEXT.darker());
-        } else if (s instanceof KeybindSetting k) {
+        if (s instanceof KeybindSetting k) {
             Fonts.get(9).draw(g, k.name, rx + 6, ry + 6, TEXT);
 
             String bind = ( listener == k ) ? "...." : k.label();
             Fonts.get(9).draw(g, bind, rx + rw - 6 - bind.length() * 6, ry + 6, TEXT);
+        } else if (s instanceof BoolSetting b) {
+            Fonts.get(9).draw(g, b.name, rx + 6, ry + 6, TEXT);
+            Fonts.get(9).draw(g, b.get() ? "On" : "Off", rx + rw - 24, ry + 6, b.get() ? TEXT : TEXT.darker());
         }
     }
 
