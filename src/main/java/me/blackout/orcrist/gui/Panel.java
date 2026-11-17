@@ -8,6 +8,7 @@ import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.systems.modules.Modules;
 import me.blackout.orcrist.utils.render.Renderer2D;
+import me.blackout.orcrist.utils.render.text.Fonts;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.KeyEvent;
 
@@ -25,7 +26,7 @@ public class Panel {
     private final Color BG = new Color(24, 24, 24);
     private final Color SIDEBAR = new Color(22, 22, 33);
     private final Color HOVER = new Color(133, 121, 121);
-    private final Color ENABLED = new Color(78, 67, 96);
+    private final Color ENABLED = new Color(121, 100, 100);
     private final Color TEXT = new Color(255, 255, 255);
 
     private final GUI gui;
@@ -93,7 +94,7 @@ public class Panel {
             Renderer2D.quadWH(g, x + padding, cy, Sidebar_W - padding * 2, Row_h, hover ? HOVER : SIDEBAR);
 
             if (c == category) Renderer2D.quadWH(g, x + padding, cy, 2, Row_h, ACCENT);
-            Renderer2D.text(g, c.name, x + padding + 5, cy + 8, c == category ? TEXT : TEXT.darker());
+            Fonts.get(9).draw(g, c.name, x + padding + 5, cy + 8, c == category ? TEXT : TEXT.darker());
             cy += Row_h + 2;
         }
 
@@ -104,7 +105,7 @@ public class Panel {
 
         Renderer2D.quadWH(g, x + 6, y + 3, 80, 0, new Color(74, 79, 101));
 
-        Renderer2D.text(g, "Orcrist", x + 200, y + 6, TEXT);
+        Fonts.get(9).draw(g, "Orcrist", x + 200, y + 6, TEXT);
 
         // search bar
 //        int sy = y + 30 + padding;
@@ -132,7 +133,7 @@ public class Panel {
 
         Renderer2D.quadWH(g, listX(), ry, listW() - 3, Row_h, hover ? HOVER : new Color(0, 0, 0, 0));
         Renderer2D.quadWH(g, listX(), ry, 3, Row_h, m.isEnabled() ? ENABLED : BG);
-        Renderer2D.text(g, m.name, x + 200, ry + 7, TEXT);
+        Fonts.get(12).draw(g, m.name, x + 200, ry + 7, TEXT);
 
         if (!m.getSettings().isEmpty()) {
             Renderer2D.text(g, expanded.contains(m) ? "v" : ">", listX() + listW() - 12, ry + 6, TEXT);
@@ -146,13 +147,13 @@ public class Panel {
 
         // Settings
         if (s instanceof BoolSetting b) {
-            Renderer2D.text(g, b.name, rx + 6, ry + 6, TEXT);
-            Renderer2D.text(g, b.get() ? "On" : "Off", rx + rw - 24, ry + 6, b.get() ? ENABLED : TEXT.darker());
+            Fonts.get(9).draw(g, b.name, rx + 6, ry + 6, TEXT);
+            Fonts.get(9).draw(g, b.get() ? "On" : "Off", rx + rw - 24, ry + 6, b.get() ? TEXT : TEXT.darker());
         } else if (s instanceof KeybindSetting k) {
-            Renderer2D.text(g, k.name, rx + 6, ry + 6, TEXT);
+            Fonts.get(9).draw(g, k.name, rx + 6, ry + 6, TEXT);
 
             String bind = ( listener == k ) ? "...." : k.label();
-            Renderer2D.text(g, bind, rx + rw - 6 - bind.length() * 6, ry + 6, TEXT);
+            Fonts.get(9).draw(g, bind, rx + rw - 6 - bind.length() * 6, ry + 6, TEXT);
         }
     }
 
