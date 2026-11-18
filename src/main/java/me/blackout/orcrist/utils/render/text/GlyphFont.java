@@ -62,9 +62,20 @@ public class GlyphFont {
         draw(graphics, text, x, y, color);
     }
 
-//    public int height() {
-//        return
-//    }
+    public int width(String text) {
+        if (text == null || !ensureReady()) return 0;
+        int w = 0;
+        for (int i = 0; i < text.length(); i++) {
+            int c = text.charAt(i);
+            if (c < FIRST || c > LAST) c = '?';
+            w += adv[c];
+        }
+        return (int) Math.ceil(w / (double) SCALE);
+    }
+
+    public int height(String text) {
+        return ensureReady() ? lineHeight / SCALE : size;
+    }
 
     // Baking atlas (Better performance than laggy slow rendering)
     private boolean ensureReady() {
