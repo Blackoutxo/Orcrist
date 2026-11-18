@@ -10,6 +10,10 @@ public class Utils {
         Input.registerKey();
     }
 
+    public static boolean hovered(double mx, double my, int x, int y, int w, int h) {
+        return mx >= x && mx < x + w && my >= y && my < y + h;
+    }
+
     public static void beginFrame() {
         long now = System.nanoTime();
         dt = Math.min((now - nano) / 1_000_000_000.0, 0.1);
