@@ -84,7 +84,7 @@ public class Panel {
         }
 
         Renderer2D.quadWH(g, x, y + 1, Width, Height, BG);
-        Renderer2D.verticalGradient(g, x + 85, y + 1, x + Width - 2, y + Height - 2, new Color(17, 15, 15), new Color(37, 57, 143));
+        Renderer2D.verticalGradient(g, x + 85, y + 1, x + Width - 2, y + Height - 2, new Color(17, 15, 15), new Color(40, 70, 178));
 
         // Sidebar
         Renderer2D.quadWH(g, x + 2, y + 2, 90, Height - 4, SIDEBAR);
