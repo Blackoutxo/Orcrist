@@ -39,6 +39,22 @@ public class WSidebar extends Widget {
             if (selected || hover) {
                 Renderer2D.quadWH(graphics, x, rowy, w, 25, selected ? new Color(0, 0, 0) : new Color(255, 255, 255));
             }
+            if (selected) Renderer2D.quadWH(graphics, x, rowy, 2, 25, new Color(40, 70, 178));
+
+            renderer.text(graphics, all[i].name, x + 16, rowy, 25, selected ? new Color(255, 255, 255) : new Color(203, 201, 201));
         }
+        renderer.text(graphics, "Orcrist", x + 8, y + h - 20, 14, new Color(203, 201, 201));
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        Category[] all = Category.values();
+        for (int i = 0; i < all.length; i++) {
+            if (Utils.hovered(mouseX, mouseY, x, rowY(i), w, 25)) {
+                renderer.category = all[i];
+                return true;
+            }
+        }
+        return false;
     }
 }
