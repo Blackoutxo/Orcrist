@@ -1,5 +1,6 @@
 package me.blackout.orcrist.gui.widget;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.gui.GuiRenderer;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
@@ -60,6 +61,23 @@ public class WModuleList extends WScrollable {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!contains(mouseX, mouseY)) return false;
+
+        List<Module> modules = Modules.get(renderer.category, "");
+
+        int rel = (int) (mouseY - (y - scroll));
+        int index = rel / STEP;
+        if (index < 0 || index >= modules.size() || rel % STEP >= 26) return true;
+
+        Module m = modules.get(index);
+        boolean onDots = mouseX >= x + w - 20;
+
+        if (button == InputConstants.MOUSE_BUTTON_LEFT && !onDots) {
+            m.toggle();
+        } else if ((button == InputConstants.MOUSE_BUTTON_RIGHT) && !m.getSettings().isEmpty()) {
+            renderer.selected = (renderer.selected == m) ? null : m;
+        }
+
         return true;
     }
 }
