@@ -1,5 +1,6 @@
 package me.blackout.orcrist.gui.theme;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.gui.GUI;
 import me.blackout.orcrist.gui.GuiRenderer;
 import me.blackout.orcrist.gui.utils.GuiValues;
@@ -7,10 +8,12 @@ import me.blackout.orcrist.gui.widget.WModuleList;
 import me.blackout.orcrist.gui.widget.WSettingsList;
 import me.blackout.orcrist.gui.widget.WSidebar;
 import me.blackout.orcrist.gui.widget.Widget;
+import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class OrcristGuiTheme {
@@ -25,7 +28,7 @@ public class OrcristGuiTheme {
 
     private final List<Widget> widgets;
 
-    public OrcristGuiTheme(GUI gui, int x, int y) {
+    public OrcristGuiTheme(int x, int y) {
         this.x = x;
         this.y = y;
 
@@ -57,6 +60,41 @@ public class OrcristGuiTheme {
         int contentW = GuiValues.UI_W - GuiValues.SIDEBAR_W;
 
         Renderer2D.quadWH(graphics, contentX, y, contentW, GuiValues.STRIP_H, new Color(21, 26, 43));
+        Renderer2D.verticalGradient(graphics, contentX, y + GuiValues.STRIP_H, x + GuiValues.UI_W, y + GuiValues.UI_H, new Color(24, 33, 63), new Color(43, 68, 145));
 
+        for (Widget w : widgets) w.render(graphics, mouseX, mouseY);
+    }
+
+    // Mouse clicked
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        boolean insideWindow = Utils.hovered(mouseX, mouseY, x, y, GuiValues.UI_W, GuiValues.UI_H);
+        boolean consumed = false;
+
+        for (Widget w : widgets) consumed |= w.mouseClicked(mouseX, mouseY, button);
+
+        boolean header = Utils.hovered(mouseX, mouseY, x, y, GuiValues.UI_W - GuiValues.SIDEBAR_W, GuiValues.STRIP_H);
+        if (header && button == InputConstants.MOUSE_BUTTON_LEFT) {
+            dragX = (int) mouseX - x;
+            dragY = (int) mouseY - y;
+            return true;
+        }
+
+        return insideWindow;
+    }
+
+    // Mouse released
+    public void mouseReleased() {
+        dragging = false;
+        for (Widget w : widgets) w.mouseReleased();
+    }
+
+    // Mouse Scrolled
+    public void mouseScrolled(double mouseX, double mouseY, double amount) {
+        for (Widget w : widgets) if (w.mouseScrolled(mouseX, mouseY, amount)) return;
+    }
+
+    // Key pressed
+    public void keyPressed(KeyEvent event) {
+        for (Widget w : widgets) w.keyPressed(event);
     }
 }
