@@ -1,10 +1,12 @@
 package me.blackout.orcrist.gui.widget;
 
 import me.blackout.orcrist.gui.GuiRenderer;
+import me.blackout.orcrist.gui.utils.GuiValues;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 
 import java.awt.*;
 
@@ -21,7 +23,7 @@ public class WSidebar extends Widget {
     }
 
     private int rowY(int index) {
-        return y + MARGIN + index * (25 + SPACING);
+        return y + MARGIN + index * (GuiValues.CATEGORY_H + SPACING);
     }
 
     @Override
@@ -34,16 +36,17 @@ public class WSidebar extends Widget {
             int rowy = rowY(i);
 
             boolean selected = all[i] == renderer.category;
-            boolean hover = Utils.hovered(cx, cy, x, rowy, w, 25);
+            boolean hover = Utils.hovered(cx, cy, x, rowy, w, GuiValues.CATEGORY_H);
 
             if (selected || hover) {
-                Renderer2D.quadWH(graphics, x, rowy, w, 25, selected ? new Color(0, 0, 0) : new Color(255, 255, 255));
+                Renderer2D.quadWH(graphics, x, rowy, w, GuiValues.CATEGORY_H, selected ? GuiValues.CTG_SEL : GuiValues.CTG_HOV);
             }
-            if (selected) Renderer2D.quadWH(graphics, x, rowy, 2, 25, new Color(40, 70, 178));
+            if (selected) Renderer2D.quadWH(graphics, x, rowy, 2, GuiValues.CATEGORY_H, GuiValues.ACCENT);
 
-            renderer.text(graphics, all[i].name, x + 16, rowy, 25, selected ? new Color(255, 255, 255) : new Color(203, 201, 201));
+            Renderer2D.icon(graphics, Identifier.fromNamespaceAndPath("orcrist", all[i].path), 64, x + 8, rowy + GuiValues.CATEGORY_H / 2, 10, 0, new Color(255, 255, 255));
+            renderer.text(graphics, all[i].name, x + 16, rowy, 9, selected ? GuiValues.TEXT : GuiValues.TEXT_DIM);
         }
-        renderer.text(graphics, "Orcrist", x + 8, y + h - 20, 14, new Color(203, 201, 201));
+        renderer.text(graphics, "Orcrist", x + 8, y + h - 20, 9, new Color(253, 253, 253, 148));
     }
 
     @Override
