@@ -2,16 +2,12 @@ package me.blackout.orcrist.utils.render;
 
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.IdentifierException;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.awt.*;
 
@@ -65,6 +61,15 @@ public class Renderer2D {
 
     public static void triangle(GuiGraphicsExtractor graphics, double x, double y, double size, float rotation, Color color) {
         icon(graphics, TRIANGLE, 128, x, y, size, rotation, color);
+    }
+
+    // Rounded corners quads
+
+    // Horizontally rounded quads (pill shaped)
+    public static void quadRoundedH(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
+        circle(graphics, x + width / 2, y, width, color);
+        circle(graphics, x + width / 2, y + height, width, color);
+        quadWH(graphics, x, y, width, height, color);
     }
 
     // Lines
