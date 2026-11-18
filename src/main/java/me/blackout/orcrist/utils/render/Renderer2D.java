@@ -116,6 +116,15 @@ public class Renderer2D {
         }
     }
 
+    // Scissors
+    public static void startScissor(GuiGraphicsExtractor graphics, double x, double y, double width, double height) {
+        graphics.enableScissor(round(x), round(y), round(x + width), round(y + height));
+    }
+
+    public static void stopScissor(GuiGraphicsExtractor graphics) {
+        graphics.disableScissor();
+    }
+
     // Helpers
     private static int round(double v) {
         return (int) Math.round(v);
