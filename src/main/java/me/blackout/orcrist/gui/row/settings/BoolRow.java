@@ -15,7 +15,7 @@ public class BoolRow extends SettingRow {
     // Pill is the knob's sliding place
 
     private final BoolSetting bool;
-    private GuiRenderer renderer;
+    private final GuiRenderer renderer = new GuiRenderer();
 
     public BoolRow(BoolSetting setting) {
         super(setting);
@@ -25,7 +25,7 @@ public class BoolRow extends SettingRow {
     @Override
     public void render(GuiGraphicsExtractor graphics, int x, int y, int w, int mouseX, int mouseY) {
         boolean on = bool.get();
-        renderer.text(graphics, bool.name, x + 1, y, HEIGHT, on ? new Color(255, 255, 255) : new Color(255, 255, 255).darker());
+        renderer.text(graphics, bool.name, x + 1, y, 9, on ? new Color(255, 255, 255) : new Color(255, 255, 255).darker());
 
         int px = x + w - 5 - P_WIDTH;
         int py = y + (HEIGHT - P_HEIGHT) / 2;
