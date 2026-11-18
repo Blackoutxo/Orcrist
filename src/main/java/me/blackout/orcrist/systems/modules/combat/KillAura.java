@@ -1,6 +1,5 @@
 package me.blackout.orcrist.systems.modules.combat;
 
-import me.blackout.orcrist.eventBus.EventHandler;
 import me.blackout.orcrist.settings.BoolSetting;
 import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Category;
