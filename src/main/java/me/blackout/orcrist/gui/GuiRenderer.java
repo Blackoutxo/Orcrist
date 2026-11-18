@@ -1,8 +1,8 @@
 package me.blackout.orcrist.gui;
 
 import me.blackout.orcrist.systems.modules.Category;
+import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.utils.render.text.Fonts;
-import me.blackout.orcrist.utils.render.text.GlyphFont;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
@@ -16,6 +16,7 @@ public class GuiRenderer {
     public static Identifier TRIANGLE;
 
     public Category category;
+    public Module selected;
 
     public void init() {
         ARROW = Identifier.fromNamespaceAndPath("orcrist", "icons/elements/arrow.png");
