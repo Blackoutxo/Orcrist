@@ -19,8 +19,8 @@ public abstract class SettingRow {
 
     // Mouse click
     public final boolean click(double mouseX, int button, int x, int w) {
-        if (button == InputConstants.MOUSE_BUTTON_LEFT) onLeft(mouseX, x, w);
-        if (button == InputConstants.MOUSE_BUTTON_RIGHT) onRight();
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) return onLeft(mouseX, x, w);
+        if (button == InputConstants.MOUSE_BUTTON_RIGHT) return onRight();
         return false;
     }
 
