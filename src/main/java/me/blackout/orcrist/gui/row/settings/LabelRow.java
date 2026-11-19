@@ -10,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import java.awt.*;
 
 public abstract class LabelRow extends SettingRow {
-    private GuiRenderer renderer;
+    private GuiRenderer renderer = new GuiRenderer();
 
     public LabelRow(Setting<?> setting) {
         super(setting);
@@ -21,8 +21,8 @@ public abstract class LabelRow extends SettingRow {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, int x, int y, int w, int mouseX, int mouseY) {
-        Renderer2D.quadWH(graphics, x, y, w, HEIGHT, GuiValues.ROW);
         renderer.text(graphics, setting.name, x + 6, HEIGHT, 9, new Color(255, 255, 255));
         renderer.text(graphics, valueText(), w - 3, y, 9,color());
+        Renderer2D.quadWH(graphics, x, y, w, HEIGHT, GuiValues.ROW);
     }
 }
