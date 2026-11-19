@@ -29,7 +29,7 @@ public class WSidebar extends Widget {
         Category[] all = Category.values();
 
         for (int i = 0; i < all.length; i++) {
-            int rowy = rowY(i);
+            int rowy = rowY(i) + 5;
 
             boolean selected = all[i] == renderer.category;
             boolean hover = Utils.hovered(cx, cy, x, rowy, w, GuiValues.CATEGORY_H);
@@ -38,7 +38,7 @@ public class WSidebar extends Widget {
                 Renderer2D.quadWH(graphics, x, rowy, w - 2, GuiValues.CATEGORY_H, selected ? GuiValues.CTG_SEL : GuiValues.CTG_HOV);
             }
 
-            if (selected) Renderer2D.verticalGradient(graphics, x, rowy, x + 2, GuiValues.CATEGORY_H, new Color(140, 237, 235, 1), new Color(45, 71, 128, 1));
+            if (selected) Renderer2D.verticalGradient(graphics, x, rowy, x + 2, rowy + GuiValues.CATEGORY_H, new Color(140, 237, 235, 1), new Color(45, 71, 128, 1));
 
             Renderer2D.icon(graphics, Identifier.fromNamespaceAndPath("orcrist", all[i].path), 64, x + 8, rowy + GuiValues.CATEGORY_H / 2, 13, 0, new Color(255, 255, 255));
             renderer.text(graphics, all[i].name, x + 20, rowy, 11, selected ? GuiValues.TEXT : GuiValues.TEXT_DIM);
