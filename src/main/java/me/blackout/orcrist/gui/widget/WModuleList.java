@@ -56,14 +56,14 @@ public class WModuleList extends WScrollable {
 
         Renderer2D.quadWH(graphics, x, cardY, w, GuiValues.CARD_H, background);
         Renderer2D.quadWH(graphics, x, cardY + GuiValues.CARD_H, w, 2, new Color(24, 24, 24, 50));
-        renderer.text(graphics, m.name, x + 4, cardY + 3, 13, GuiValues.TEXT);
+        renderer.text(graphics, m.name, x + 5, cardY + 4, 10, GuiValues.TEXT);
 
         Renderer2D.quadWH(graphics, x + w - 10, y, 10, GuiValues.CARD_H, GuiValues.CARD.darker());
         if (!m.getSettings().isEmpty()) drawDots(graphics, x + w - 4, cardY + 13);
     }
 
     private void drawDots(GuiGraphicsExtractor graphics, int dotsX, int dotsY) {
-        Renderer2D.icon(graphics, DOT, 64, dotsX, dotsY, 15, 0, new Color(255, 255, 255));
+        Renderer2D.icon(graphics, DOT, 64, dotsX, dotsY, 10, 0, new Color(255, 255, 255));
     }
 
     @Override
