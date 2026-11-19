@@ -67,8 +67,8 @@ public class Renderer2D {
 
     // Horizontally rounded quads (pill shaped)
     public static void quadRoundedH(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
-        circle(graphics, x + width / 2, y, width, color);
-        circle(graphics, x + width / 2, y + height, width, color);
+        circle(graphics, x, y + height / 2.0, height, color);
+        circle(graphics, x + width, y + height / 2.0, height, color);
         quadWH(graphics, x, y, width, height, color);
     }
 
