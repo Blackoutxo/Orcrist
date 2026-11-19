@@ -17,22 +17,30 @@ public class BoolRow extends SettingRow {
     private final BoolSetting bool;
     private final GuiRenderer renderer = new GuiRenderer();
 
+    private double knob;
+
     public BoolRow(BoolSetting setting) {
         super(setting);
         this.bool = setting;
+
+        this.knob = setting.get() ? 1 : 0;
     }
 
     @Override
     public void render(GuiGraphicsExtractor graphics, int x, int y, int w, int mouseX, int mouseY) {
         boolean on = bool.get();
-        renderer.text(graphics, bool.name, x + 1, y, 9, on ? new Color(255, 255, 255) : new Color(255, 255, 255).darker());
+        renderer.text(graphics, bool.name, x + 1, y + (HEIGHT - 9) / 2, 9, on ? new Color(255, 255, 255) : new Color(255, 255, 255).darker());
+
+        knob = Utils.animate(knob, on ? 1 : 0, 18);
 
         int px = x + w - 5 - P_WIDTH;
         int py = y + (HEIGHT - P_HEIGHT) / 2;
-        double t = Utils.animate(0, on ? 1 : 0, 18);
 
         Renderer2D.quadRoundedH(graphics, px, py, P_WIDTH, P_HEIGHT, on ? GuiValues.BTN_ON : GuiValues.BTN_OFF);
-        Renderer2D.circle(graphics, px + t * P_WIDTH, py * P_HEIGHT / 2.0, KNOB, GuiValues.KNOB);
+
+        double knobX = (px - 3) + P_HEIGHT / 2.0 + knob * (P_WIDTH - 3);
+        double knobY = py + P_HEIGHT / 2.0;
+        Renderer2D.circle(graphics, knobX, knobY, KNOB, on ? GuiValues.KNOB.darker() : GuiValues.KNOB);
     }
 
     @Override
