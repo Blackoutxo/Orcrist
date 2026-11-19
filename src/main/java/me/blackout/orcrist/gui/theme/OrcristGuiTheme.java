@@ -108,7 +108,11 @@ public class OrcristGuiTheme {
     }
 
     // Key pressed
-    public void keyPressed(KeyEvent event) {
-        for (Widget w : widgets) w.keyPressed(event);
+    public boolean keyPressed(KeyEvent event) {
+        for (Widget w : widgets) {
+            if (w.keyPressed(event)) return true;
+        }
+
+        return false;
     }
 }
