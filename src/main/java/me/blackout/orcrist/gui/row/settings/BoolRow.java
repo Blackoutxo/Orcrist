@@ -36,7 +36,7 @@ public class BoolRow extends SettingRow {
         int px = x + w - 5 - P_WIDTH;
         int py = y + (HEIGHT - P_HEIGHT) / 2;
 
-        Renderer2D.quadRoundedH(graphics, px, py, P_WIDTH, P_HEIGHT, on ? GuiValues.BTN_ON : GuiValues.BTN_OFF);
+        Renderer2D.quadRoundedH(graphics, px, py, P_WIDTH, P_HEIGHT, on ? GuiValues.BTN_ON.brighter() : GuiValues.BTN_OFF);
 
         double knobX = (px - 3) + P_HEIGHT / 2.0 + knob * (P_WIDTH - 3);
         double knobY = py + P_HEIGHT / 2.0;
