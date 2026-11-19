@@ -18,8 +18,10 @@ import java.util.List;
 
 public class OrcristGuiTheme {
     public int x, y;
+    private double prevX, prevY;
     private boolean dragging;
-    private int dragX, dragY;
+
+    private GUI gui;
 
     private final GuiRenderer renderer = new GuiRenderer();
     private final WSidebar sidebar = new WSidebar(renderer);
@@ -28,10 +30,14 @@ public class OrcristGuiTheme {
 
     private final List<Widget> widgets;
 
-    public OrcristGuiTheme(int x, int y) {
+    public OrcristGuiTheme(GUI gui, int x, int y) {
         this.x = x;
         this.y = y;
 
+        this.prevX = x;
+        this.prevY = y;
+
+        this.gui = gui;
         this.widgets = List.of(sidebar, moduleList, settingsList);
     }
 
@@ -41,26 +47,28 @@ public class OrcristGuiTheme {
         int top = y + 24;
         int bottom = y + 272;
         int listTop = top + 8;
-        int rightX = x + 140;
+        int rightX = x + GuiValues.CARD_W + 14;
+        int rightW = x + GuiValues.UI_W - GuiValues.PAD - rightX;
 
         sidebar.setBound(x, y, GuiValues.SIDEBAR_W, GuiValues.UI_H);
-        moduleList.setBound(midX, listTop, 132, bottom - listTop);
-        settingsList.setBound(rightX, top, x + GuiValues.UI_W - GuiValues.PAD - rightX, bottom - top);
+        moduleList.setBound(midX, listTop, GuiValues.CARD_W, bottom - listTop);
+        settingsList.setBound(rightX, top, rightW, bottom - top);
     }
 
     // Render
     public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        if (dragging) {
-            x = mouseX - dragX;
-            y = mouseY - dragY;
-        }
+        x = (int) Math.round(prevX);
+        y = (int) Math.round(prevY);
         layout();
 
         int contentX = x + GuiValues.SIDEBAR_W;
         int contentW = GuiValues.UI_W - GuiValues.SIDEBAR_W;
 
+        Renderer2D.quadWH(graphics, contentX, y, contentW + 1, y + GuiValues.UI_H + 1, GuiValues.C_BG);
         Renderer2D.quadWH(graphics, contentX, y, contentW, GuiValues.STRIP_H, new Color(21, 26, 43));
-        Renderer2D.verticalGradient(graphics, contentX, y + GuiValues.STRIP_H, x + GuiValues.UI_W, y + GuiValues.UI_H, new Color(24, 33, 63), new Color(43, 68, 145));
+
+        Renderer2D.verticalGradient(graphics, contentX, y + GuiValues.STRIP_H, x + GuiValues.UI_W - 2, y + GuiValues.UI_H - 1, new Color(24, 33, 63), new Color(43, 68, 145));
+        Renderer2D.verticalGradient(graphics, contentX, y + 28, x + contentW - 1, y + 33, new Color(142, 168, 224), new Color(46, 51, 73));
 
         for (Widget w : widgets) w.render(graphics, mouseX, mouseY);
     }
@@ -72,14 +80,21 @@ public class OrcristGuiTheme {
 
         for (Widget w : widgets) consumed |= w.mouseClicked(mouseX, mouseY, button);
 
-        boolean header = Utils.hovered(mouseX, mouseY, x, y, GuiValues.UI_W - GuiValues.SIDEBAR_W, GuiValues.STRIP_H);
+        boolean header = Utils.hovered(mouseX, mouseY, x + GuiValues.SIDEBAR_W, y, GuiValues.UI_W - GuiValues.SIDEBAR_W, GuiValues.STRIP_H);
         if (header && button == InputConstants.MOUSE_BUTTON_LEFT) {
-            dragX = (int) mouseX - x;
-            dragY = (int) mouseY - y;
+            dragging = true;
             return true;
         }
 
         return insideWindow;
+    }
+
+    // Mouse drag
+    public boolean mouseDragged(double dragX, double dragY) {
+        if (!dragging) return false;
+        prevX = Math.max(0, Math.min(prevX + dragX, gui.width - GuiValues.UI_W));
+        prevY = Math.max(0, Math.min(prevY + dragY, gui.height - GuiValues.UI_H));
+        return true;
     }
 
     // Mouse released
