@@ -21,8 +21,13 @@ public abstract class LabelRow extends SettingRow {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, int x, int y, int w, int mouseX, int mouseY) {
-        renderer.text(graphics, setting.name, x + 6, HEIGHT, 9, new Color(255, 255, 255));
-        renderer.text(graphics, valueText(), w - 3, y, 9,color());
         Renderer2D.quadWH(graphics, x, y, w, HEIGHT, GuiValues.ROW);
+
+        int textY = y + (HEIGHT - 9) / 2;
+        renderer.text(graphics, setting.name, x + 6, textY, 9, new Color(255, 255, 255));
+
+        String value = valueText();
+        int valueX = x + w - 8 - renderer.width(value, 9);
+        renderer.text(graphics, value, valueX, textY, 9, color());
     }
 }
