@@ -5,13 +5,14 @@ import java.awt.*;
 public class GuiValues {
 
     // UI & Cards
-    public static int UI_W = 440, UI_H = 280;
-    public static int SIDEBAR_W = 100, STRIP_H = 20, PAD = 8;
-    public static int CATEGORY_H = 26;
-    public static int CARD_W = 132, CARD_H = 26;
+    public static int UI_W = 400, UI_H = 250;
+    public static int SIDEBAR_W = 90, STRIP_H = 28, PAD = 4;
+    public static int CATEGORY_H = 20;
+    public static int CARD_W = 140, CARD_H = 25;
     public static int GAP = 4;
 
     // Colors
+    public static Color C_BG = new Color(24, 24, 24);
     public static Color SIDEBAR_BG = new Color(13, 17, 28);
     public static Color STRIP = new Color(21, 26, 43);
 
