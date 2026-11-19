@@ -12,11 +12,6 @@ public class KeybindSetting extends Setting<Integer> {
         super("Key Bind", "Binds modules to a key in keyboard.", NONE);
     }
 
-    public boolean isBound() {
-        return value != NONE;
-    }
-    public String label() { return isBound() ? label : "None"; }
-
     @Override
     public void reset() {
         unbind();
@@ -51,4 +46,9 @@ public class KeybindSetting extends Setting<Integer> {
         String inp = Inputs.get(key);
         return inp.isEmpty() ? "Key " + key : inp;
     }
+
+    public boolean isBound() {
+        return value != NONE;
+    }
+    public String label() { return isBound() ? label : "None"; }
 }
