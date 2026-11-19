@@ -11,9 +11,9 @@ import me.blackout.orcrist.gui.widget.Widget;
 import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class OrcristGuiTheme {
@@ -43,15 +43,14 @@ public class OrcristGuiTheme {
 
     // Set layout
     private void layout() {
-        int midX = x + 108;
-        int top = y + 24;
-        int bottom = y + 272;
-        int listTop = top + 8;
-        int rightX = x + GuiValues.CARD_W + 20;
+        int midX = x + GuiValues.SIDEBAR_W + GuiValues.PAD;
+        int top = y + GuiValues.STRIP_H + 10;
+        int bottom = y + GuiValues.UI_H - GuiValues.PAD;
+        int rightX = midX + GuiValues.CARD_W + 14;
         int rightW = x + GuiValues.UI_W - GuiValues.PAD - rightX;
 
         sidebar.setBound(x, y, GuiValues.SIDEBAR_W, GuiValues.UI_H);
-        moduleList.setBound(midX, listTop, GuiValues.CARD_W, bottom - listTop);
+        moduleList.setBound(midX, top, GuiValues.CARD_W, bottom - top);
         settingsList.setBound(rightX, top, rightW - 20, bottom - top);
     }
 
@@ -64,7 +63,7 @@ public class OrcristGuiTheme {
         int contentX = x + GuiValues.SIDEBAR_W;
         int contentW = GuiValues.UI_W - GuiValues.SIDEBAR_W;
 
-        Renderer2D.quadWH(graphics, x - 2, y - 2, GuiValues.UI_W + 1, GuiValues.UI_H + 3, GuiValues.C_BG);
+        Renderer2D.quadWH(graphics, x - 2, y - 2, GuiValues.UI_W + 3, GuiValues.UI_H + 3, GuiValues.C_BG);
         Renderer2D.quadWH(graphics, contentX, y, contentW, GuiValues.STRIP_H, new Color(21, 26, 43));
 
         Renderer2D.verticalGradient(graphics, contentX, y + GuiValues.STRIP_H, x + GuiValues.UI_W - 2, y + GuiValues.UI_H - 1, new Color(24, 33, 63), new Color(43, 68, 145));
