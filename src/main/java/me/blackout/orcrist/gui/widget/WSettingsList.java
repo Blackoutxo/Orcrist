@@ -3,6 +3,7 @@ package me.blackout.orcrist.gui.widget;
 import me.blackout.orcrist.gui.GuiRenderer;
 import me.blackout.orcrist.gui.row.SettingRow;
 import me.blackout.orcrist.gui.row.SettingRows;
+import me.blackout.orcrist.gui.utils.GuiValues;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class WSettingsList extends WScrollable {
-    private static final int STEP = 25;
+    private static final int STEP = SettingRow.HEIGHT + GuiValues.GAP;
 
     private final GuiRenderer renderer;
     private final Map<Module, List<SettingRow>> rowCache = new HashMap<>();
@@ -32,10 +33,7 @@ public class WSettingsList extends WScrollable {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        if (renderer.selected == null) {
-            renderer.text(graphics, "Right Click - Settings", x, y + 16, 6, new Color(140, 140, 140, 219));
-            return;
-        }
+        if (renderer.selected == null) return;
 
         if (renderer.selected != lastSelected) {
             scroll = 0;
@@ -65,7 +63,7 @@ public class WSettingsList extends WScrollable {
             int relP = (int) (mouseY - (y - scroll));
             int index = relP / STEP;
 
-            if (index >= 0 && index < rows.size()) clickIndex = index;
+            if (index >= 0 && index < rows.size() && relP % STEP < SettingRow.HEIGHT) clickIndex = index;
         }
 
         for (int i = 0; i < rows.size(); i++) {
