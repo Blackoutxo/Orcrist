@@ -6,6 +6,7 @@ import me.blackout.orcrist.gui.utils.GuiValues;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.systems.modules.Modules;
+import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
@@ -41,8 +42,10 @@ public class WModuleList extends WScrollable {
 
         for (Module m : modules) {
             if (cardY + GuiValues.CARD_H >= y & cardY <= y + h) {
-                drawCard(graphics, m, cardY, inside);
+                boolean hover = inside || Utils.hovered(mouseX, mouseY, x, cardY, w, GuiValues.CARD_H);
+                drawCard(graphics, m, cardY, hover);
             }
+            cardY += STEP;
         }
 
         Renderer2D.stopScissor(graphics);
@@ -53,13 +56,14 @@ public class WModuleList extends WScrollable {
 
         Renderer2D.quadWH(graphics, x, cardY, w, GuiValues.CARD_H, background);
         Renderer2D.quadWH(graphics, x, cardY + GuiValues.CARD_H, w, 2, GuiValues.C_BG);
-        renderer.text(graphics, m.name, x + 4, cardY + 6, 13, GuiValues.TEXT);
+        renderer.text(graphics, m.name, x + 4, cardY + 3, 13, GuiValues.TEXT);
 
-        if (!m.getSettings().isEmpty()) drawDots(graphics, x + w - 12, cardY + GuiValues.CARD_H / 2 - 5);
+        Renderer2D.quadWH(graphics, x + w - 10, y, 10, GuiValues.CARD_H, GuiValues.CARD.darker());
+        if (!m.getSettings().isEmpty()) drawDots(graphics, x + w - 4, cardY + 13);
     }
 
     private void drawDots(GuiGraphicsExtractor graphics, int dotsX, int dotsY) {
-        Renderer2D.icon(graphics, DOT, 64, dotsX, dotsY, 10, 0, new Color(255, 255, 255));
+        Renderer2D.icon(graphics, DOT, 64, dotsX, dotsY, 15, 0, new Color(255, 255, 255));
     }
 
     @Override
