@@ -7,10 +7,8 @@ import me.blackout.orcrist.gui.utils.GuiValues;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

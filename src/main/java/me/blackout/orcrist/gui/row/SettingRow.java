@@ -3,8 +3,7 @@ package me.blackout.orcrist.gui.row;
 import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.settings.Setting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-
-import java.awt.event.KeyEvent;
+import net.minecraft.client.input.KeyEvent;
 
 public abstract class SettingRow {
     public static final int HEIGHT = 20;

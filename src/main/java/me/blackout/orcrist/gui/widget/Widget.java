@@ -3,8 +3,7 @@ package me.blackout.orcrist.gui.widget;
 import me.blackout.orcrist.utils.Utils;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.CharacterEvent;
-
-import java.awt.event.KeyEvent;
+import net.minecraft.client.input.KeyEvent;
 
 public abstract class Widget {
     protected int x, y, w, h;
