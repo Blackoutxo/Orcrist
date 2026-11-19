@@ -55,7 +55,7 @@ public class Config {
         for (Module m : Modules.all()) {
             if (!root.contains(m.name)) continue;
             CompoundTag mod = root.getCompoundOrEmpty(m.name);
-            CompoundTag settings = root.getCompoundOrEmpty("Settings");
+            CompoundTag settings = mod.getCompoundOrEmpty("Settings");
 
             for (Setting<?> s : m.getSettings()) {
                 s.load(settings);
