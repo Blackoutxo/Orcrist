@@ -18,7 +18,7 @@ public class SettingRows {
         KeybindSetting keyBind = null;
 
         for (Setting<?> setting : module.getSettings()) {
-            if (setting instanceof KeybindSetting k) {
+            if (setting instanceof KeybindSetting k && k.name.startsWith("Key Bind")) {
                 keyBind = k;
                 continue;
             }
@@ -27,7 +27,7 @@ public class SettingRows {
             if (row != null) rows.add(row);
         }
 
-        if (keyBind != null) rows.add(new KeybindRow(keyBind));
+        if (keyBind != null && keyBind.name.startsWith("Key Bind")) rows.add(new KeybindRow(keyBind));
         return rows;
     }
 
