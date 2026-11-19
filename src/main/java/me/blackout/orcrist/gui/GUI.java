@@ -6,6 +6,7 @@ import me.blackout.orcrist.systems.Config;
 import me.blackout.orcrist.utils.Utils;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,11 @@ public class GUI extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         panel.mouseScrolled(mouseX, mouseY, scrollY);
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        return panel.keyPressed(event) || super.keyPressed(event);
     }
 
     @Override
