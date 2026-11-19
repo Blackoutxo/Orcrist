@@ -52,13 +52,14 @@ public class WModuleList extends WScrollable {
         Color background = (m == renderer.selected) ? GuiValues.CARD_SEL : hover ? GuiValues.CARD_HOV : GuiValues.CARD;
 
         Renderer2D.quadWH(graphics, x, cardY, w, GuiValues.CARD_H, background);
+        Renderer2D.quadWH(graphics, x, cardY + GuiValues.CARD_H, w, 2, GuiValues.C_BG);
         renderer.text(graphics, m.name, x + 4, cardY + 6, 13, GuiValues.TEXT);
 
         if (!m.getSettings().isEmpty()) drawDots(graphics, x + w - 12, cardY + GuiValues.CARD_H / 2 - 5);
     }
 
     private void drawDots(GuiGraphicsExtractor graphics, int dotsX, int dotsY) {
-        Renderer2D.icon(graphics, DOT, 64, dotsX, dotsY, 2, 0, new Color(255, 255, 255));
+        Renderer2D.icon(graphics, DOT, 64, dotsX, dotsY, 10, 0, new Color(255, 255, 255));
     }
 
     @Override
