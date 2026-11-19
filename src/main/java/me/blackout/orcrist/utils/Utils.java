@@ -1,6 +1,9 @@
 package me.blackout.orcrist.utils;
 
 import me.blackout.orcrist.utils.input.Input;
+import net.minecraft.client.gui.screens.Screen;
+
+import static me.blackout.orcrist.Orcrist.mc;
 
 public class Utils {
     private static long nano = System.nanoTime();
@@ -24,5 +27,9 @@ public class Utils {
         double diff = target - value;
         if (Math.abs(diff) < 0.001) return target;
         return value + diff * (1.0 - Math.exp(-progress * dt));
+    }
+
+    public static void openScreen(Screen screen) {
+        if (mc != null) mc.gui.setScreen(screen);
     }
 }
