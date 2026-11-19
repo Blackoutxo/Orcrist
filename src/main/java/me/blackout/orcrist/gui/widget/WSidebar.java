@@ -12,10 +12,6 @@ import java.awt.*;
 
 public class WSidebar extends Widget {
     private static final int MARGIN = 6, SPACING = 2;
-
-    private static final Color SIDEBAR = new Color(22, 22, 33);
-    private final Color HOVER = new Color(133, 121, 121, 115);
-
     private GuiRenderer renderer;
 
     public WSidebar(GuiRenderer renderer) {
@@ -28,7 +24,7 @@ public class WSidebar extends Widget {
 
     @Override
     public void render(GuiGraphicsExtractor graphics, int cx, int cy) {
-        Renderer2D.quadWH(graphics, x, y, w, h, SIDEBAR);
+        Renderer2D.quadWH(graphics, x, y, w, h, GuiValues.SIDEBAR_BG);
 
         Category[] all = Category.values();
 
@@ -39,12 +35,13 @@ public class WSidebar extends Widget {
             boolean hover = Utils.hovered(cx, cy, x, rowy, w, GuiValues.CATEGORY_H);
 
             if (selected || hover) {
-                Renderer2D.quadWH(graphics, x, rowy, w, GuiValues.CATEGORY_H, selected ? GuiValues.CTG_SEL : GuiValues.CTG_HOV);
+                Renderer2D.quadWH(graphics, x, rowy, w - 2, GuiValues.CATEGORY_H, selected ? GuiValues.CTG_SEL : GuiValues.CTG_HOV);
             }
-            if (selected) Renderer2D.quadWH(graphics, x, rowy, 2, GuiValues.CATEGORY_H, GuiValues.ACCENT);
 
-            Renderer2D.icon(graphics, Identifier.fromNamespaceAndPath("orcrist", all[i].path), 64, x + 8, rowy + GuiValues.CATEGORY_H / 2, 10, 0, new Color(255, 255, 255));
-            renderer.text(graphics, all[i].name, x + 16, rowy, 9, selected ? GuiValues.TEXT : GuiValues.TEXT_DIM);
+            if (selected) Renderer2D.verticalGradient(graphics, x, rowy, x + 2, GuiValues.CATEGORY_H, new Color(140, 237, 235, 1), new Color(45, 71, 128, 1));
+
+            Renderer2D.icon(graphics, Identifier.fromNamespaceAndPath("orcrist", all[i].path), 64, x + 8, rowy + GuiValues.CATEGORY_H / 2, 13, 0, new Color(255, 255, 255));
+            renderer.text(graphics, all[i].name, x + 20, rowy, 11, selected ? GuiValues.TEXT : GuiValues.TEXT_DIM);
         }
         renderer.text(graphics, "Orcrist", x + 8, y + h - 20, 9, new Color(253, 253, 253, 148));
     }
