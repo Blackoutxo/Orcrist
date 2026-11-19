@@ -17,16 +17,6 @@ public class KeybindSetting extends Setting<Integer> {
     }
     public String label() { return isBound() ? label : "None"; }
 
-    public void bind(KeyEvent event) {
-        value = event.key();
-        label = Inputs.get(event.key());
-    }
-
-    public void unbind() {
-        value = NONE;
-        label = "None";
-    }
-
     @Override
     public void reset() {
         unbind();
@@ -42,5 +32,23 @@ public class KeybindSetting extends Setting<Integer> {
     public void load(CompoundTag tag) {
         value = tag.getIntOr(name, value);
         label = tag.getStringOr(name + "_label", "");
+
+        if (!isBound()) label = "None";
+        else if (label.isEmpty()) label = nameOf(value);
+    }
+
+    public void bind(KeyEvent event) {
+        value = event.key();
+        label = Inputs.get(event.key());
+    }
+
+    public void unbind() {
+        value = NONE;
+        label = "None";
+    }
+
+    private static String nameOf(int key) {
+        String inp = Inputs.get(key);
+        return inp.isEmpty() ? "Key " + key : inp;
     }
 }
