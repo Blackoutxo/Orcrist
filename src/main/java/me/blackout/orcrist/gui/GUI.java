@@ -11,11 +11,15 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
+import static me.blackout.orcrist.Orcrist.mc;
+
 public class GUI extends Screen {
     private OrcristGuiTheme panel;
+    private final Screen parent;
 
-    public GUI() {
+    public GUI(Screen parent) {
         super(Component.literal("Orcrist"));
+        this.parent = parent;
     }
 
     @Override
@@ -64,8 +68,9 @@ public class GUI extends Screen {
     }
 
     @Override
-    public void removed() {
+    public void onClose() {
         Config.save();
-        super.removed();
+        mc.gui.setScreen(parent);
+        super.onClose();
     }
 }
