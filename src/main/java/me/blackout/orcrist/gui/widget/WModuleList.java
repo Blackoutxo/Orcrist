@@ -55,7 +55,7 @@ public class WModuleList extends WScrollable {
         Color background = (m == renderer.selected) ? GuiValues.CARD_SEL : hover ? GuiValues.CARD_HOV : GuiValues.CARD;
 
         Renderer2D.quadWH(graphics, x, cardY, w, GuiValues.CARD_H, background);
-        Renderer2D.quadWH(graphics, x, cardY + GuiValues.CARD_H, w, 2, GuiValues.C_BG);
+        Renderer2D.quadWH(graphics, x, cardY + GuiValues.CARD_H, w, 2, new Color(24, 24, 24, 50));
         renderer.text(graphics, m.name, x + 4, cardY + 3, 13, GuiValues.TEXT);
 
         Renderer2D.quadWH(graphics, x + w - 10, y, 10, GuiValues.CARD_H, GuiValues.CARD.darker());
