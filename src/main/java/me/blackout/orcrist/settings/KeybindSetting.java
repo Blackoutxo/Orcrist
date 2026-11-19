@@ -39,12 +39,12 @@ public class KeybindSetting extends Setting<Integer> {
 
     public void bind(KeyEvent event) {
         value = event.key();
-        label = Inputs.get(event.key());
+        label = Inputs.get(event);
     }
 
     public void unbind() {
         value = NONE;
-        label = "None";
+        label = nameOf(value);
     }
 
     private static String nameOf(int key) {
