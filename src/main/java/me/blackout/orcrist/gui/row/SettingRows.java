@@ -1,3 +1,8 @@
+/*
+ * This file is a part of Orcrist distribution (https://github.com/Blackoutxo/Orcrist)
+ * Copyright (c) Blackoutxo
+ */
+
 package me.blackout.orcrist.gui.row;
 
 import me.blackout.orcrist.gui.row.settings.BoolRow;
