@@ -8,6 +8,8 @@ package me.blackout.orcrist.systems.modules;
 import me.blackout.orcrist.Orcrist;
 import me.blackout.orcrist.settings.KeybindSetting;
 import me.blackout.orcrist.settings.Setting;
+import me.blackout.orcrist.utils.player.ChatUtils;
+import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +37,11 @@ public abstract class Module {
 
         if (enabled) {
             Orcrist.EVENT_BUS.subscribe(this);
+            info(name + " toggled " + ChatFormatting.GREEN + "ON");
             onEnable();
         } else {
             Orcrist.EVENT_BUS.unsubscribe(this);
+            info(name + " toggled " + ChatFormatting.RED + "OFF");
             onDisable();
         }
     }
@@ -56,5 +60,17 @@ public abstract class Module {
 
     public void setEnabled(boolean state) {
         if (state != enabled) toggle();
+    }
+
+    public void info(String message) {
+        ChatUtils.sendMsg(message);
+    }
+
+    public void warn(String message) {
+        ChatUtils.sendMsg(ChatFormatting.YELLOW + message);
+    }
+
+    public void error(String message) {
+        ChatUtils.sendMsg(ChatFormatting.RED + message);
     }
 }
