@@ -8,8 +8,8 @@ package me.blackout.orcrist.settings;
 import net.minecraft.nbt.CompoundTag;
 
 public class BoolSetting extends Setting<Boolean> {
-    public BoolSetting(String name, String description, Boolean defaultValue) {
-        super(name, description, defaultValue);
+    private BoolSetting(Builder builder) {
+        super(builder.name, builder.description, builder.defaultValue);
     }
 
     @Override
@@ -23,4 +23,32 @@ public class BoolSetting extends Setting<Boolean> {
     }
 
     public void toggle() { value = !value; }
+
+    public static class Builder {
+        private String name;
+        private String description;
+        private boolean defaultValue;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder defaultValue(boolean defaultValue) {
+            this.defaultValue = defaultValue;
+            return this;
+        }
+
+        public BoolSetting build() {
+            if (name.isBlank())
+                throw new IllegalStateException("Setting name cannot be blank");
+
+            return new BoolSetting(this);
+        }
+    }
 }
