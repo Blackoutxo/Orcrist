@@ -37,11 +37,11 @@ public abstract class Module {
 
         if (enabled) {
             Orcrist.EVENT_BUS.subscribe(this);
-            info(name + " toggled " + ChatFormatting.GREEN + "ON");
+            info(name + " toggled " + ChatFormatting.GREEN + "On");
             onEnable();
         } else {
             Orcrist.EVENT_BUS.unsubscribe(this);
-            info(name + " toggled " + ChatFormatting.RED + "OFF");
+            info(name + " toggled " + ChatFormatting.RED + "Off");
             onDisable();
         }
     }
