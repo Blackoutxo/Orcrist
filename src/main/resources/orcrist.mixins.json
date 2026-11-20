@@ -3,7 +3,8 @@
   "package": "me.blackout.orcrist.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "ClientPacketListenerMixin"
+    "ClientPacketListenerMixin",
+    "KeyBoardMixin"
   ],
   "injectors": {
     "defaultRequire": 1
