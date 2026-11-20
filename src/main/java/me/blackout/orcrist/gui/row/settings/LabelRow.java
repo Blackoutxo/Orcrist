@@ -23,7 +23,7 @@ public abstract class LabelRow extends SettingRow {
     public void render(GuiGraphicsExtractor graphics, int x, int y, int w, int mouseX, int mouseY) {
         Renderer2D.quadWH(graphics, x, y, w, HEIGHT, GuiValues.ROW);
 
-        int textY = y + (HEIGHT - 9) / 2;
+        int textY = y + (HEIGHT - 8) / 2;
         renderer.text(graphics, setting.name, x + 6, textY, 9, new Color(255, 255, 255));
 
         String value = valueText();
