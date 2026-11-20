@@ -47,6 +47,10 @@ public class KeybindSetting extends Setting<Integer> {
         return inp.isEmpty() ? "Key " + key : inp;
     }
 
+    public boolean matches(KeyEvent event) {
+        return isBound() && value == event.key();
+    }
+
     public boolean isBound() {
         return value != NONE;
     }
