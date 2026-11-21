@@ -11,6 +11,7 @@ import me.blackout.orcrist.systems.Config;
 import me.blackout.orcrist.utils.Utils;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,7 @@ public class GUI extends Screen {
 
     @Override
     protected void init() {
+        Utils.setHook(this::setTextInput);
         if (panel != null) return;
         panel = new OrcristGuiTheme(this, width / 2 - GuiValues.UI_W / 2, height / 2 - GuiValues.UI_H / 2);
     }
@@ -68,6 +70,15 @@ public class GUI extends Screen {
     }
 
     @Override
+    public boolean charTyped(CharacterEvent event) {
+        return panel.charTyped(event) || super.charTyped(event);
+    }
+
+    public void setTextInput(boolean on) {
+        mc.onTextInputFocusChange(this, on);
+    }
+
+    @Override
     public boolean isPauseScreen() {
         return false;
     }
@@ -77,5 +88,11 @@ public class GUI extends Screen {
         Config.save();
         mc.gui.setScreen(parent);
         super.onClose();
+    }
+
+    @Override
+    public void removed() {
+        Utils.set(false);
+        super.removed();
     }
 }
