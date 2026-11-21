@@ -8,6 +8,7 @@ package me.blackout.orcrist.gui.row;
 import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.settings.Setting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 
 public abstract class SettingRow {
@@ -40,5 +41,6 @@ public abstract class SettingRow {
 
     public void mouseReleased() {}
     public boolean keyPressed(KeyEvent event) { return false; }
+    public boolean charTyped(CharacterEvent event) { return false; }
     public void onFocusLost() {}
 }
