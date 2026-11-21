@@ -24,7 +24,7 @@ public abstract class Module {
     private final List<Setting> settings = new ArrayList<>();
     public final KeybindSetting keyBind = add(new KeybindSetting());
 
-    public Module(String name, String description, Category category) {
+    public Module(Category category, String name, String description) {
         this.name = name;
         this.description = description;
         this.category = category;
@@ -38,16 +38,16 @@ public abstract class Module {
         if (enabled) {
             Orcrist.EVENT_BUS.subscribe(this);
             info(name + " toggled " + ChatFormatting.GREEN + "On");
-            onEnable();
+            onActivate();
         } else {
             Orcrist.EVENT_BUS.unsubscribe(this);
             info(name + " toggled " + ChatFormatting.RED + "Off");
-            onDisable();
+            onDeactivate();
         }
     }
 
-    protected void onEnable() {}
-    protected void onDisable() {}
+    protected void onActivate() {}
+    protected void onDeactivate() {}
 
     protected <S extends Setting<?>> S add(S setting) {
         settings.add(setting);
