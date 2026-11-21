@@ -5,11 +5,14 @@
 
 package me.blackout.orcrist.systems.modules.combat;
 
+import me.blackout.orcrist.eventBus.EventHandler;
+import me.blackout.orcrist.events.TickEvent;
 import me.blackout.orcrist.settings.BoolSetting;
 import me.blackout.orcrist.settings.DoubleSetting;
 import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
+import net.minecraft.world.entity.Entity;
 
 public class KillAura extends Module {
 
@@ -22,7 +25,7 @@ public class KillAura extends Module {
 
     public Setting<Double> range = add(new DoubleSetting.Builder()
             .name("Range")
-            .description("ATCK range")
+            .description("Attack range")
             .defaultValue(5)
             .minValue(1)
             .maxValue(7)
@@ -30,6 +33,17 @@ public class KillAura extends Module {
     );
 
     public KillAura() {
-        super("Kill Aura", "Automatically kills entities nearby!", Category.Combat);
+        super(Category.Combat, "Kill Aura", "Automatically kills entities nearby!");
     }
+
+    @Override
+    public void onActivate() {
+    }
+
+    @EventHandler
+    private void onTick(TickEvent.Post event) {
+
+    }
+
+
 }
