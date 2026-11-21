@@ -6,7 +6,7 @@
 package me.blackout.orcrist.mixin;
 
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
 import me.blackout.orcrist.Orcrist;
 import me.blackout.orcrist.events.PacketEvent;
 import net.minecraft.network.Connection;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ConnectionMixin {
 
     @Inject(method = "channelRead0", at = @At("HEAD"), cancellable = true)
-    private void onReceive(ChannelHandler ctx, Packet<?> packet, CallbackInfo ci) {
+    private void onReceive(ChannelHandlerContext ctx, Packet<?> packet, CallbackInfo ci) {
         PacketEvent.Receive event = Orcrist.EVENT_BUS.post(new PacketEvent.Receive(packet, (Connection) (Object) this));
         if (event.isCancelled()) ci.cancel();
     }
@@ -31,7 +31,7 @@ public class ConnectionMixin {
         if (event.isCancelled()) ci.cancel();
     }
 
-    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V", at = @At("HEAD"))
+    @Inject(method = "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V", at = @At("RETURN"))
     private void onSent(Packet<?> packet, ChannelFutureListener listener, boolean flush, CallbackInfo ci) {
         Orcrist.EVENT_BUS.post(new PacketEvent.Sent(packet, (Connection) (Object) this));
     }
