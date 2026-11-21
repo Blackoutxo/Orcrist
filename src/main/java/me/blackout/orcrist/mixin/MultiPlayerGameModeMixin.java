@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin implements IMultiPlayerGameMode {
 
-    @Shadow protected abstract void ensureHasSentCarriedItem();
+    @Shadow
+    protected void ensureHasSentCarriedItem() {}
 
     @Override
     public void orcrist$syncSelected() {
