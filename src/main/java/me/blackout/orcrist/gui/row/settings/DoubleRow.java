@@ -5,6 +5,7 @@
 
 package me.blackout.orcrist.gui.row.settings;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.gui.GuiRenderer;
 import me.blackout.orcrist.gui.row.SettingRow;
 import me.blackout.orcrist.gui.utils.GuiValues;
@@ -13,6 +14,7 @@ import me.blackout.orcrist.settings.DoubleSetting;
 import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 
 public class DoubleRow extends SettingRow {
@@ -24,7 +26,7 @@ public class DoubleRow extends SettingRow {
     private final NumberEditor editor = new NumberEditor();
     private final GuiRenderer renderer = new GuiRenderer();
 
-    private int NAME_W = 45, BOX_W = 38;
+    private int NAME_W = 45, BOX_W = 30;
 
     private double lastShown = Double.NaN;
     private String shownText = "";
@@ -40,7 +42,7 @@ public class DoubleRow extends SettingRow {
     }
 
     private int trackW(int w) {
-        return w - NAME_W - BOX_W - 10;
+        return w - NAME_W - BOX_W - 8;
     }
 
     private int boxX(int x, int w) {
@@ -81,7 +83,7 @@ public class DoubleRow extends SettingRow {
 
         if (n != lastShown) {
             lastShown = n;
-            shownText = "" + n;
+            shownText = Utils.format(n, 2);
         }
 
         return shownText;
@@ -104,8 +106,9 @@ public class DoubleRow extends SettingRow {
     }
 
     private void setFromMouse(double mouseX, int x, int w) {
-        double p = Math.max(0, Math.min(1, (mouseX - trackX(x))) / trackW(w));
-        number.set(number.minValue + p * (number.maxValue - number.minValue));
+        double p = Math.max(0, Math.min(1, (mouseX - trackX(x)) / trackW(w)));
+        double raw = number.minValue + p * (number.maxValue - number.minValue);
+        number.set(Utils.round(raw, 2));
     }
 
     @Override
@@ -113,8 +116,29 @@ public class DoubleRow extends SettingRow {
         if (!editor.isActive()) return false;
 
         int key = event.key();
+        if (key == InputConstants.KEY_NUMPADENTER) commit();
+        else if (key == InputConstants.KEY_ESCAPE) editor.cancel();
+        else if (key == InputConstants.KEY_BACKSPACE) editor.backSpace();
+        return true;
+    }
 
-        return false;
+    @Override
+    public boolean charTyped(CharacterEvent event) {
+        if (!editor.isActive()) return false;
+        editor.type((char) event.codepoint());
+        return true;
+    }
+
+    @Override
+    public void onFocusLost() {
+        if (editor.isActive()) editor.cancel();
+    }
+
+    private void commit() {
+        double n = editor.commit();
+        if (Double.isNaN(n)) return;
+        n = Math.max(number.minValue, Math.min(number.maxValue, n));
+        number.set(Utils.round(n, 2));
     }
 
     @Override
