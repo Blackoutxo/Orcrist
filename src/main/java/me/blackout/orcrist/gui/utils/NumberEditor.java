@@ -5,6 +5,8 @@
 
 package me.blackout.orcrist.gui.utils;
 
+import me.blackout.orcrist.utils.Utils;
+
 public class NumberEditor {
 
     private final StringBuilder sb = new StringBuilder();
@@ -23,10 +25,12 @@ public class NumberEditor {
         sb.append(current);
         fresh = true;
         active = true;
+        Utils.set(true);
     }
 
     public void type(char c) {
         boolean allowed = (c >= '0' && c <= '9') || c == '.' || c == '-';
+        if (!allowed || !active) return;
 
         if (fresh) { sb.setLength(0);  fresh = false; }
 
@@ -46,10 +50,15 @@ public class NumberEditor {
         String s = sb.toString();
         end();
 
-        try { return Double.parseDouble(s); } catch (NumberFormatException e) { return Double.NaN; }
+        return Double.parseDouble(s);
     }
 
-    public void end() {
+    public void cancel() {
+        end();
+    }
+
+    private void end() {
         active = false;
+        Utils.set(false);
     }
 }
