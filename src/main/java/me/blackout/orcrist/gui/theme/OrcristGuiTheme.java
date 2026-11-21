@@ -16,6 +16,7 @@ import me.blackout.orcrist.gui.widget.Widget;
 import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 
 import java.awt.*;
@@ -56,7 +57,7 @@ public class OrcristGuiTheme {
 
         sidebar.setBound(x, y, GuiValues.SIDEBAR_W, GuiValues.UI_H);
         moduleList.setBound(midX, top, GuiValues.CARD_W, bottom - top);
-        settingsList.setBound(rightX, top, rightW - 20, bottom - top);
+        settingsList.setBound(rightX, top, rightW, bottom - top);
     }
 
     // Render
@@ -118,6 +119,12 @@ public class OrcristGuiTheme {
             if (w.keyPressed(event)) return true;
         }
 
+        return false;
+    }
+
+    // Characters
+    public boolean charTyped(CharacterEvent event) {
+        for (Widget widget : widgets) if (widget.charTyped(event)) return true;
         return false;
     }
 }
