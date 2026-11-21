@@ -5,7 +5,7 @@
 
 package me.blackout.orcrist.gui.widget;
 
-public abstract class WScrollable extends Widget{
+public abstract class WScrollable extends Widget {
     protected int scroll;
 
     protected void clampScroll(int cHeight) {
