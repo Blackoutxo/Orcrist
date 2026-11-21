@@ -12,6 +12,7 @@ import me.blackout.orcrist.gui.utils.GuiValues;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 
 import java.util.HashMap;
@@ -89,6 +90,12 @@ public class WSettingsList extends WScrollable {
             if (row.keyPressed(event)) return true;
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean charTyped(CharacterEvent event) {
+        for (SettingRow row : rows()) if (row.charTyped(event)) return true;
         return false;
     }
 }
