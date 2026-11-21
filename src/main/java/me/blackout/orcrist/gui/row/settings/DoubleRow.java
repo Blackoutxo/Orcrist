@@ -8,25 +8,31 @@ package me.blackout.orcrist.gui.row.settings;
 import me.blackout.orcrist.gui.GuiRenderer;
 import me.blackout.orcrist.gui.row.SettingRow;
 import me.blackout.orcrist.gui.utils.GuiValues;
+import me.blackout.orcrist.gui.utils.NumberEditor;
 import me.blackout.orcrist.settings.DoubleSetting;
 import me.blackout.orcrist.utils.Utils;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.KeyEvent;
 
 public class DoubleRow extends SettingRow {
     private final DoubleSetting number;
-//    private String format;
     private double fill;
 
     private boolean dragging;
 
+    private final NumberEditor editor = new NumberEditor();
     private final GuiRenderer renderer = new GuiRenderer();
 
-    private int NAME_W = 50, BOX_W = 40;
+    private int NAME_W = 45, BOX_W = 38;
+
+    private double lastShown = Double.NaN;
+    private String shownText = "";
 
     public DoubleRow(DoubleSetting setting) {
         super(setting);
         this.number = setting;
+        this.fill = setting.progress();
     }
 
     private int trackX(int x) {
@@ -37,30 +43,78 @@ public class DoubleRow extends SettingRow {
         return w - NAME_W - BOX_W - 10;
     }
 
+    private int boxX(int x, int w) {
+        return x + w - BOX_W;
+    }
+
     @Override
     public void render(GuiGraphicsExtractor graphics, int x, int y, int w, int mouseX, int mouseY) {
         if (dragging) setFromMouse(mouseX, x, w);
 
-        renderer.text(graphics, number.name, x + 1, y, HEIGHT, GuiValues.TEXT);
+        renderer.text(graphics, number.name, x + 1, y + 3, 9, GuiValues.TEXT);
 
-        fill = Utils.animate(number.get(), number.progress(), 20);
+        // Fix ts
+        double target = Math.max(0, Math.min(1, number.progress()));
+        fill = dragging ? target : Math.max(0, Math.min(1, Utils.animate(fill, target, 20)));
 
         int tx = trackX(x);
-        int ty = y + 10;
+        int ty = y + HEIGHT / 2;
         int tw = trackW(w);
 
         Renderer2D.quadWH(graphics, tx, ty, tw, 1, GuiValues.TRACK);
         Renderer2D.horizontalGradient(graphics, tx, ty, tx + tw * fill, ty + 1, GuiValues.TF_START, GuiValues.TF_END);
-        Renderer2D.circle(graphics, tx + tw * fill, ty, 7, GuiValues.TEXT);
+        Renderer2D.circle(graphics, tx + tw * fill, ty + 0.5, 7, GuiValues.TEXT);
 
-        int boxX = x + w - BOX_W;
+        renderBox(graphics, boxX(x, w), y, y + 3);
+    }
+
+    private void renderBox(GuiGraphicsExtractor graphics, int boxX, int y, int textY) {
         Renderer2D.quadWH(graphics, boxX, y + 4, BOX_W, 12, GuiValues.VALBOX);
-        renderer.text(graphics, number.get().toString(), boxX + 4, y, HEIGHT, GuiValues.TEXT);
+
+        String text = editor.isActive() ? editor.text() + "|" : shownValue();
+        int textX = boxX + Math.max(2, (BOX_W - renderer.width(text, 9)) / 2);
+        renderer.text(graphics, text, textX, textY, 9, GuiValues.TEXT);
+    }
+
+    private String shownValue() {
+        double n = number.get();
+
+        if (n != lastShown) {
+            lastShown = n;
+            shownText = "" + n;
+        }
+
+        return shownText;
+    }
+
+    @Override
+    public boolean onLeft(double mouseX, int x, int w) {
+        // Click on box
+        if (mouseX >= boxX(x, w)) {
+            editor.begin(shownValue());
+            return true;
+        }
+
+        // Click on track check
+        if (mouseX < trackX(x) - 5) return false;
+        dragging = true;
+        setFromMouse(mouseX, x, w);
+
+        return true;
     }
 
     private void setFromMouse(double mouseX, int x, int w) {
         double p = Math.max(0, Math.min(1, (mouseX - trackX(x))) / trackW(w));
         number.set(number.minValue + p * (number.maxValue - number.minValue));
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (!editor.isActive()) return false;
+
+        int key = event.key();
+
+        return false;
     }
 
     @Override
