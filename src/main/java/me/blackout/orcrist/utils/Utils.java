@@ -6,7 +6,12 @@
 package me.blackout.orcrist.utils;
 
 import me.blackout.orcrist.utils.input.Input;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
+import net.minecraft.client.gui.screens.worldselection.SelectWorldScreen;
 
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -55,6 +60,16 @@ public class Utils {
     public static double round(double value, int decimals) {
         double scale = Math.pow(10, decimals);
         return Math.round(value * scale) / scale;
+    }
+
+    // Screen
+    public static boolean canOpen() {
+        Screen screen = mc.gui.screen();
+        return screen instanceof TitleScreen
+                || screen instanceof PauseScreen
+                || screen instanceof JoinMultiplayerScreen
+                || screen instanceof SelectWorldScreen
+                || screen instanceof ChatScreen;
     }
 
     // Text input focus helpers
