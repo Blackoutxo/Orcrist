@@ -45,24 +45,10 @@ public class KillAura extends Module {
             .build()
     );
 
-//    public final Setting<Boolean> invisibles = add(new BoolSetting.Builder()
-//            .name("Invisibles")
-//            .description("Hits invisible targets.")
-//            .defaultValue(true)
-//            .build()
-//    );
-
     public final Setting<Boolean> weaponOnly = add(new BoolSetting.Builder()
             .name("Weapon Only")
             .description("Hits with only weapon.")
             .defaultValue(false)
-            .build()
-    );
-
-    public final Setting<Boolean> criticalHits = add(new BoolSetting.Builder()
-            .name("Critical Only")
-            .description("Hits only crits.")
-            .defaultValue(true)
             .build()
     );
 
@@ -101,6 +87,10 @@ public class KillAura extends Module {
             if (!(entity instanceof LivingEntity living)) continue;
             if (target == entity) attack(living);
         }
+    }
+
+    private void entityCheck(LivingEntity entity) {
+
     }
 
     private void attack(LivingEntity entity) {
