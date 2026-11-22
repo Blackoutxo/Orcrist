@@ -10,6 +10,7 @@ import me.blackout.orcrist.settings.KeybindSetting;
 import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.utils.player.ChatUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public abstract class Module {
     public final String name;
     public final String description;
     public final Category category;
+    public final Minecraft mc;
 
     private boolean enabled;
 
@@ -28,6 +30,7 @@ public abstract class Module {
         this.name = name;
         this.description = description;
         this.category = category;
+        this.mc = Minecraft.getInstance();
     }
 
     public boolean isEnabled() { return enabled; }
