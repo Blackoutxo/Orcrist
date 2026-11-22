@@ -5,6 +5,7 @@
 
 package me.blackout.orcrist.utils.player;
 
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
@@ -46,11 +47,10 @@ public class Rotations {
         double horizontal = Math.sqrt(dx * dx + dz * dz);
 
         float yaw = (float) (Math.toDegrees(Math.atan2(dz, dx)) - 90);
-        float pitch = (float) (Math.toDegrees(Math.atan2(dy, horizontal)));
+        float pitch = (float) (-Math.toDegrees(Math.atan2(dy, horizontal)));
 
         return new Rotation(Mth.wrapDegrees(yaw), Math.clamp(pitch, -90f, 90f));
     }
-
 
     public static Rotation rotateTo(Entity target, AimPart part) {
         return rotateTo(aimPoint(target, part));
@@ -64,11 +64,14 @@ public class Rotations {
         double s = mc.options.sensitivity().get() * 0.6 + 0.2;
         float step = (float) (s * s * s * 8.0 * 0.15);
 
-        // TODO: ON CHECK
         float yaw = from.yaw() + Math.round(Mth.wrapDegrees(to.yaw() - from.yaw()) / step) * step;
         float pitch = from.pitch() + Math.round(Mth.wrapDegrees(to.pitch() - from.pitch()) / step) * step;
 
         return new Rotation(yaw, Math.clamp(pitch, -90f, 90f));
+    }
+
+    public static Rotation rotateTo(Entity target) {
+        return rotateTo(target.getBoundingBox().getCenter());
     }
 
     public static void look(Rotation r) {
@@ -76,5 +79,15 @@ public class Rotations {
 
         mc.player.setYRot(r.yaw());
         mc.player.setXRot(r.pitch());
+    }
+
+    // Server side rotation
+    public static void rotate(Entity entity) {
+        Rotation rotation = rotateTo(entity);
+
+        mc.player.connection.send(new ServerboundMovePlayerPacket.Rot(
+                rotation.yaw, rotation.pitch,
+                PlayerUtils.isOnGround(), mc.player.horizontalCollision
+        ));
     }
 }
