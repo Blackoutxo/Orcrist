@@ -7,7 +7,6 @@ package me.blackout.orcrist.utils.player;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -36,8 +35,19 @@ public class PlayerUtils {
 
     // Movement
     public static boolean isMoving() {
-        return !mc.player.input.keyPresses.forward()
-                || !mc.player.input.keyPresses.left();
+        return mc.player.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6;
+    }
+
+    public static boolean isOnGround() {
+        return mc.player.onGround();
+    }
+
+//    public static double speed() {
+//
+//    }
+
+    public static boolean isSprinting() {
+        return mc.player.isSprinting();
     }
 
     // Distance and visibility
