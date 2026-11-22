@@ -92,9 +92,9 @@ public class Renderer2D {
         graphics.fill(ax, ay, bx, by, color.getRGB());
     }
 
-    public static void outlinedQuad(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color color) {
-        fill(graphics, x, y, x + width, y + height, color);
-        graphics.outline(x, y, width, height, color.getRGB());
+    public static void outlinedQuad(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Color bgColor, Color outlineColor) {
+        quad(graphics, x, y, x + width, y + height, bgColor);
+        graphics.outline(x, y, width, height, outlineColor.getRGB());
     }
 
     public static void fill(GuiGraphicsExtractor graphics, int x1, int y1, int x2, int y2, Color color) {
