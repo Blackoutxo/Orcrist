@@ -7,6 +7,7 @@ package me.blackout.orcrist.utils.player;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -51,11 +52,11 @@ public class PlayerUtils {
     }
 
     // Distance and visibility
-    public static boolean inRange(Entity entity, double range, boolean throughWall) {
+    public static boolean inRange(LivingEntity entity, double range, boolean throughWall) {
         return throughWall ? distanceTo(entity) <= range : ((distanceTo(entity) <= range) && canSee(entity));
     }
 
-    public static double distanceTo(Entity entity) {
+    public static double distanceTo(LivingEntity entity) {
         if (mc.player == null || entity == null) return 0;
 
         AABB box = entity.getBoundingBox();
