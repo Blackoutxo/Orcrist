@@ -33,6 +33,12 @@ public abstract class SettingRow {
     protected boolean onLeft(double mouseX, int x, int w) {
         return false;
     }
+    public String name() {
+        return setting.name;
+    }
+    public String description() {
+        return setting.description;
+    }
 
     protected boolean onRight() {
         setting.reset();
