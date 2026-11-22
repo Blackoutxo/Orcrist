@@ -18,6 +18,7 @@ import me.blackout.orcrist.utils.player.InvUtils;
 import me.blackout.orcrist.utils.player.PlayerUtils;
 import me.blackout.orcrist.utils.player.Rotations;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
@@ -90,10 +91,10 @@ public class KillAura extends Module {
         } else if (swords.isHotbar()) InvUtils.setSlot(swords.slot());
 
         for (Entity entity : mc.level.entitiesForRendering())
-            attack(entity);
+            attack((LivingEntity) entity);
     }
 
-    private void attack(Entity entity) {
+    private void attack(LivingEntity entity) {
         if (!TargetUtils.isValidTarget(entity)) return;
         if (!PlayerUtils.inRange(entity, range.get(), throughWalls.get())) return;
         if (mc.player.getAttackStrengthScale(0.5f) < 1.0f) return;
