@@ -5,9 +5,9 @@
 
 package me.blackout.orcrist.utils.player;
 
-import net.minecraft.core.Rotations;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -16,6 +16,29 @@ import net.minecraft.world.phys.Vec3;
 import static me.blackout.orcrist.Orcrist.mc;
 
 public class PlayerUtils {
+
+    // Health & survival
+    public static boolean inLava() {
+        return mc.player.isInLava();
+    }
+
+    public static boolean onFire() {
+        return mc.player.isOnFire();
+    }
+
+    public static double getTotalHealth() {
+        return (mc.player.getHealth() + mc.player.getAbsorptionAmount());
+    }
+
+    public static boolean isLowHealth(double threshold) {
+        return getTotalHealth() <= threshold;
+    }
+
+    // Movement
+    public static boolean isMoving() {
+        return !mc.player.input.keyPresses.forward()
+                || !mc.player.input.keyPresses.left();
+    }
 
     // Distance and visibility
     public static boolean inRange(Entity entity, double range, boolean throughWall) {
@@ -49,10 +72,5 @@ public class PlayerUtils {
 
     private static boolean clear(Vec3 from, Vec3 to) {
         return mc.level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mc.player)).getType() == HitResult.Type.MISS;
-    }
-
-    // Rotations
-    public static Rotations getRotationsTo(Vec3 vec3) {
-        return null;
     }
 }
