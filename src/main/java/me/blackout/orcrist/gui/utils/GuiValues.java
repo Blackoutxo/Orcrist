@@ -36,7 +36,7 @@ public class GuiValues {
     public static Color ROW = new Color(31, 45, 88);
     public static Color VALBOX = new Color(11, 20, 39);        // Value box
 
-    public static Color BTN_ON = new Color(18, 48, 74);        // Button
+    public static Color BTN_ON = new Color(38, 91, 140);        // Button
     public static Color BTN_OFF = new Color(20, 22, 30);
 
     public static Color KNOB = new Color(255, 255, 255);
