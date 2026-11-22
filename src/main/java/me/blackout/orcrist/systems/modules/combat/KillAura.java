@@ -9,19 +9,23 @@ import me.blackout.orcrist.eventBus.EventHandler;
 import me.blackout.orcrist.events.TickEvent;
 import me.blackout.orcrist.settings.BoolSetting;
 import me.blackout.orcrist.settings.DoubleSetting;
+import me.blackout.orcrist.settings.EnumSetting;
 import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
+import me.blackout.orcrist.utils.entity.TargetPriority;
 import me.blackout.orcrist.utils.entity.TargetUtils;
 import me.blackout.orcrist.utils.player.FindItemResult;
 import me.blackout.orcrist.utils.player.InvUtils;
-import me.blackout.orcrist.utils.player.PlayerUtils;
 import me.blackout.orcrist.utils.player.Rotations;
+import net.minecraft.network.protocol.game.ServerboundPunchPacket;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.component.SwingAnimation;
 
 public class KillAura extends Module {
 
@@ -31,6 +35,13 @@ public class KillAura extends Module {
             .defaultValue(4.5)
             .minValue(1)
             .maxValue(10)
+            .build()
+    );
+
+    public final Setting<TargetPriority> priority = add(new EnumSetting.Builder<TargetPriority>()
+            .name("Priority")
+            .description("How to sort through targets.")
+            .defaultValue(TargetPriority.LowestDistance)
             .build()
     );
 
@@ -69,7 +80,7 @@ public class KillAura extends Module {
             .build()
     );
 
-    private Item[] item = new Item[]{Items.WOODEN_SWORD, Items.STONE_SWORD, Items.GOLDEN_SWORD, Items.DIAMOND_SWORD, Items.NETHERITE_SWORD, Items.COPPER_SWORD};
+    private Item[] item = new Item[]{Items.WOODEN_SWORD, Items.STONE_SWORD, Items.GOLDEN_SWORD, Items.DIAMOND_SWORD, Items.NETHERITE_SWORD, Items.COPPER_SWORD, };
 
     public KillAura() {
         super(Category.Combat, "Kill Aura", "Automatically kills entities nearby!");
@@ -81,27 +92,28 @@ public class KillAura extends Module {
     @EventHandler
     private void onTick(TickEvent.Post event) {
         FindItemResult swords = InvUtils.find(item);
+        LivingEntity target = TargetUtils.getTarget(range.get(), throughWalls.get(), priority.get());
 
-        if (mc.player == null || mc.level == null) return;
+        if (mc.player == null || mc.level == null || target == null) return;
         if (!swords.found() && weaponOnly.get()) return;
 
-        if (swords.found() && !swords.isHotbar()) {
-            InvUtils.swapWithHotbar(swords.slot(), 1);
-            InvUtils.setSlot(1);
-        } else if (swords.isHotbar()) InvUtils.setSlot(swords.slot());
-
-        for (Entity entity : mc.level.entitiesForRendering())
-            attack((LivingEntity) entity);
+        for (Entity entity : mc.level.entitiesForRendering()) {
+            if (!(entity instanceof LivingEntity living)) continue;
+            if (target == entity) attack(living);
+        }
     }
 
     private void attack(LivingEntity entity) {
-        if (!TargetUtils.isValidTarget(entity)) return;
-        if (!PlayerUtils.inRange(entity, range.get(), throughWalls.get())) return;
         if (mc.player.getAttackStrengthScale(0.5f) < 1.0f) return;
-        if (entity.asLivingEntity().getHealth() > 15) return;
-
-        if (rotate.get()) Rotations.rotateTo(new Vec3(entity.getX(), entity.getEyeY(), entity.getZ()));
+        if (rotate.get()) Rotations.rotate(entity);
 
         mc.gameMode.attack(mc.player, entity);
+
+        // Swing
+        ItemStack held = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
+        SwingAnimation anim = held.getAttackAnimation();
+
+        mc.player.swing(InteractionHand.MAIN_HAND, anim, false);
+        mc.player.connection.send(ServerboundPunchPacket.INSTANCE);
     }
 }
