@@ -7,11 +7,9 @@ package me.blackout.orcrist.gui.row;
 
 import me.blackout.orcrist.gui.row.settings.BoolRow;
 import me.blackout.orcrist.gui.row.settings.DoubleRow;
+import me.blackout.orcrist.gui.row.settings.EnumRow;
 import me.blackout.orcrist.gui.row.settings.KeybindRow;
-import me.blackout.orcrist.settings.BoolSetting;
-import me.blackout.orcrist.settings.DoubleSetting;
-import me.blackout.orcrist.settings.KeybindSetting;
-import me.blackout.orcrist.settings.Setting;
+import me.blackout.orcrist.settings.*;
 import me.blackout.orcrist.systems.modules.Module;
 
 import java.util.ArrayList;
@@ -41,7 +39,12 @@ public class SettingRows {
     private static SettingRow create(Setting<?> s) {
         if (s instanceof BoolSetting b) return new BoolRow(b);
         if (s instanceof DoubleSetting d) return new DoubleRow(d);
+        if (s instanceof EnumSetting<?> e) return enumRow(e);
 
         return null;
+    }
+
+    private static <E extends Enum<E>> SettingRow enumRow(EnumSetting<E> setting) {
+        return new EnumRow<>(setting);
     }
 }
