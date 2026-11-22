@@ -9,6 +9,7 @@ import me.blackout.orcrist.gui.GuiRenderer;
 import me.blackout.orcrist.gui.row.SettingRow;
 import me.blackout.orcrist.gui.row.SettingRows;
 import me.blackout.orcrist.gui.utils.GuiValues;
+import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.utils.render.Renderer2D;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -48,7 +49,13 @@ public class WSettingsList extends WScrollable {
         clampScroll(rows.size() * STEP);
 
         Renderer2D.startScissor(graphics, x, y, w, h);
-        int rowY = y - scroll;
+
+        // Description
+//        renderer.text(graphics, lastSelected.description, x, y, 7, GuiValues.TEXT);
+//        Renderer2D.horizontalGradient(graphics, x, y + 10, x + ((double) w / 2), y + 9, new Color(255, 255, 255, 10), new Color(255, 255, 255));
+//        Renderer2D.horizontalGradient(graphics, x + w, y + 10, (x + w) - ((double) w / 2), y + 9, new Color(255, 255, 255), new Color(255, 255, 255, 10));
+
+        int rowY = y + 13 - scroll;
 
         for (SettingRow row : rows) {
             if (rowY + SettingRow.HEIGHT >= y && rowY <= y + h) row.render(graphics, x, rowY, w, mouseX, mouseY);
