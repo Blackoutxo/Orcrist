@@ -7,10 +7,7 @@ package me.blackout.orcrist.systems.modules.combat;
 
 import me.blackout.orcrist.eventBus.EventHandler;
 import me.blackout.orcrist.events.TickEvent;
-import me.blackout.orcrist.settings.BoolSetting;
-import me.blackout.orcrist.settings.DoubleSetting;
-import me.blackout.orcrist.settings.EnumSetting;
-import me.blackout.orcrist.settings.Setting;
+import me.blackout.orcrist.settings.*;
 import me.blackout.orcrist.systems.modules.Category;
 import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.utils.entity.TargetPriority;
@@ -22,6 +19,11 @@ import net.minecraft.network.protocol.game.ServerboundPunchPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.monster.Enderman;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -45,10 +47,40 @@ public class KillAura extends Module {
             .build()
     );
 
+    public final Setting<Boolean> playerOnly = add(new BoolSetting.Builder()
+            .name("Player Only")
+            .description("Targets players only.")
+            .defaultValue(true)
+            .build()
+    );
+
+    public final Setting<Boolean> ignorePassiveMobs = add(new BoolSetting.Builder()
+            .name("Ignore Passive")
+            .description("Will ignore passive aggressive mobs.")
+            .defaultValue(true)
+            .build()
+    );
+
     public final Setting<Boolean> weaponOnly = add(new BoolSetting.Builder()
             .name("Weapon Only")
             .description("Hits with only weapon.")
             .defaultValue(false)
+            .build()
+    );
+
+    public final Setting<Boolean> autoSwitch = add(new BoolSetting.Builder()
+            .name("Auto Switch")
+            .description("Automatically switches to a weapon in hotbar.")
+            .defaultValue(false)
+            .build()
+    );
+
+    public final Setting<Integer> weaponSlot = add(new IntSetting.Builder()
+            .name("Slot")
+            .description("Which slot to put in weapon.")
+            .defaultValue(1)
+            .minValue(1)
+            .maxValue(9)
             .build()
     );
 
@@ -81,16 +113,25 @@ public class KillAura extends Module {
         LivingEntity target = TargetUtils.getTarget(range.get(), throughWalls.get(), priority.get());
 
         if (mc.player == null || mc.level == null || target == null) return;
-        if (!swords.found() && weaponOnly.get()) return;
+        if (weaponOnly.get() && !swords.isMainHand()) return;
+
+        if (weaponOnly.get() && autoSwitch.get() && swords.found()) {
+            InvUtils.swapWithHotbar(swords.slot(), weaponSlot.get());
+        }
 
         for (Entity entity : mc.level.entitiesForRendering()) {
             if (!(entity instanceof LivingEntity living)) continue;
+            entityCheck(living);
+
             if (target == entity) attack(living);
         }
     }
 
-    private void entityCheck(LivingEntity entity) {
-
+    private void entityCheck(Entity entity) {
+        if (!(entity instanceof LivingEntity living)) return;
+        if (!(living instanceof Player && playerOnly.get())) return;
+        if ((living instanceof IronGolem || living instanceof Enderman
+            || living instanceof ZombifiedPiglin || living instanceof Piglin) && ignorePassiveMobs.get()) return;
     }
 
     private void attack(LivingEntity entity) {
