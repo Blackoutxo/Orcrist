@@ -10,7 +10,7 @@ import java.awt.*;
 public class GuiValues {
 
     // UI & Cards
-    public static int UI_W = 400, UI_H = 250;
+    public static int UI_W = 410, UI_H = 250;
     public static int SIDEBAR_W = 90, STRIP_H = 28, PAD = 4;
     public static int CATEGORY_H = 20;
     public static int CARD_W = 140, CARD_H = 25;
@@ -27,7 +27,7 @@ public class GuiValues {
     public static Color CTG_SEL = new Color(27, 34, 54);       // Category
     public static Color CTG_HOV = new Color(21, 27, 44);
 
-    public static Color ACCENT = new Color(92, 200, 232);      // Accent
+    public static Color ACCENT = new Color(68, 57, 168);      // Accent
 
     public static Color CARD = new Color(40, 48, 70);          // Cards
     public static Color CARD_SEL = new Color(58, 70, 104);
