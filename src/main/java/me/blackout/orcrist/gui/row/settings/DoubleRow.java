@@ -116,7 +116,7 @@ public class DoubleRow extends SettingRow {
         if (!editor.isActive()) return false;
 
         int key = event.key();
-        if (key == InputConstants.KEY_NUMPADENTER) commit();
+        if (key == InputConstants.KEY_NUMPADENTER || key == InputConstants.KEY_RETURN) commit();
         else if (key == InputConstants.KEY_ESCAPE) editor.cancel();
         else if (key == InputConstants.KEY_BACKSPACE) editor.backSpace();
         return true;
