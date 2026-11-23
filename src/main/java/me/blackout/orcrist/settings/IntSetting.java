@@ -26,7 +26,9 @@ public class IntSetting extends Setting<Integer> {
         value = tag.getIntOr(name, value);
     }
 
-    public int progress() { return (value - minValue) / (maxValue - minValue); }
+    public double progress() {
+        return (double) (value - minValue) / (maxValue - minValue);
+    }
 
     public static class Builder {
         private String name;
