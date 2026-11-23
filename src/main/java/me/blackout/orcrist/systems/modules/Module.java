@@ -11,7 +11,10 @@ import me.blackout.orcrist.settings.Setting;
 import me.blackout.orcrist.utils.player.ChatUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,14 +69,18 @@ public abstract class Module {
     }
 
     public void info(String message) {
-        ChatUtils.sendMsg(message);
+        ChatUtils.sendMsg(appendModule() + message);
     }
 
     public void warn(String message) {
-        ChatUtils.sendMsg(ChatFormatting.YELLOW + message);
+        ChatUtils.sendMsg(appendModule() + ChatFormatting.YELLOW + message);
     }
 
     public void error(String message) {
-        ChatUtils.sendMsg(ChatFormatting.RED + message);
+        ChatUtils.sendMsg(appendModule() + ChatFormatting.RED + message);
+    }
+
+    private String appendModule() {
+        return "[" + (Component.literal(name).setStyle(Style.EMPTY.withColor(new Color(112, 43, 232).getRGB()))) + "] ";
     }
 }
