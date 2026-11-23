@@ -36,18 +36,20 @@ public abstract class Module {
         this.mc = Minecraft.getInstance();
     }
 
-    public boolean isEnabled() { return enabled; }
+    public boolean isEnabled() {
+        return enabled;
+    }
 
     public void toggle() {
         enabled = !enabled;
 
         if (enabled) {
             Orcrist.EVENT_BUS.subscribe(this);
-            info(name + " toggled " + ChatFormatting.GREEN + "On");
+            sendToggledMsg();
             onActivate();
         } else {
             Orcrist.EVENT_BUS.unsubscribe(this);
-            info(name + " toggled " + ChatFormatting.RED + "Off");
+            sendToggledMsg();
             onDeactivate();
         }
     }
@@ -68,19 +70,25 @@ public abstract class Module {
         if (state != enabled) toggle();
     }
 
+    private void sendToggledMsg() {
+        ChatUtils.sendMsg(name + " toggled " + (enabled ? ChatFormatting.GREEN + "On" : ChatFormatting.RED + "Off"));
+    }
+
     public void info(String message) {
-        ChatUtils.sendMsg(appendModule() + message);
+        ChatUtils.sendMsg(appendModule(message));
     }
 
     public void warn(String message) {
-        ChatUtils.sendMsg(appendModule() + ChatFormatting.YELLOW + message);
+        ChatUtils.sendMsg(appendModule(ChatFormatting.YELLOW + message));
     }
 
     public void error(String message) {
-        ChatUtils.sendMsg(appendModule() + ChatFormatting.RED + message);
+        ChatUtils.sendMsg(appendModule(ChatFormatting.RED + message));
     }
 
-    private String appendModule() {
-        return "[" + (Component.literal(name).setStyle(Style.EMPTY.withColor(new Color(112, 43, 232).getRGB()))) + "] ";
+    private Component appendModule(String message) {
+        return Component.literal("[")
+               .append(Component.literal(name).setStyle(Style.EMPTY.withColor(new Color(160, 85, 238).getRGB())))
+               .append(Component.literal("] ").append(message));
     }
 }
