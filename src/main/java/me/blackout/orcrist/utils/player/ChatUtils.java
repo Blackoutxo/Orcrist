@@ -20,7 +20,7 @@ public class ChatUtils {
     private static Component getPrefix() {
         return PREFIX = Component.empty().setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY))
                 .append("[")
-                .append(Component.literal("Orcrist").setStyle(Style.EMPTY.withColor(new Color(52, 59, 210).getRGB())))
+                .append(Component.literal("Orcrist").setStyle(Style.EMPTY.withColor(new Color(56, 105, 206).getRGB())))
                 .append("]");
     }
 
