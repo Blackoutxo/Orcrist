@@ -57,7 +57,7 @@ public class IntRow extends SettingRow {
         renderer.text(graphics, number.name, x + 1, y + 3, 9, GuiValues.TEXT);
 
         // Fix ts
-        int target = Math.max(0, Math.min(1, number.progress()));
+        double target = Math.max(0, Math.min(1, number.progress()));
         fill = dragging ? target : Math.max(0, Math.min(1, Utils.animate(fill, target, 20)));
 
         int tx = trackX(x);
@@ -106,9 +106,10 @@ public class IntRow extends SettingRow {
         return true;
     }
 
-    private void setFromMouse(double mouseX, int x, int w) {;
-        int raw = (number.minValue + number.get() * (number.maxValue - number.minValue));
-        number.set(raw);
+    private void setFromMouse(double mouseX, int x, int w) {
+        double p = (mouseX - trackX(x)) / trackW(w);
+        p = Math.max(0, Math.min(1, p));
+        number.set((int) Math.round(number.minValue + p * (number.maxValue - number.minValue)));
     }
 
     @Override
@@ -116,7 +117,7 @@ public class IntRow extends SettingRow {
         if (!editor.isActive()) return false;
 
         int key = event.key();
-        if (key == InputConstants.KEY_NUMPADENTER) commit();
+        if (key == InputConstants.KEY_NUMPADENTER || key == InputConstants.KEY_RETURN) commit();
         else if (key == InputConstants.KEY_ESCAPE) editor.cancel();
         else if (key == InputConstants.KEY_BACKSPACE) editor.backSpace();
         return true;
