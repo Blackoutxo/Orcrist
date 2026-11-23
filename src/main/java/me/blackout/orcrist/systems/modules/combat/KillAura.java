@@ -19,7 +19,9 @@ import net.minecraft.network.protocol.game.ServerboundPunchPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.wolf.Wolf;
 import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.monster.zombie.ZombifiedPiglin;
@@ -117,21 +119,33 @@ public class KillAura extends Module {
 
         if (weaponOnly.get() && autoSwitch.get() && swords.found()) {
             InvUtils.swapWithHotbar(swords.slot(), weaponSlot.get());
+            InvUtils.setSlot(swords.slot());
         }
 
         for (Entity entity : mc.level.entitiesForRendering()) {
             if (!(entity instanceof LivingEntity living)) continue;
-            entityCheck(living);
+            if (!entityCheck(living)) continue;
 
             if (target == entity) attack(living);
         }
     }
 
-    private void entityCheck(Entity entity) {
-        if (!(entity instanceof LivingEntity living)) return;
-        if (!(living instanceof Player && playerOnly.get())) return;
-        if ((living instanceof IronGolem || living instanceof Enderman
-            || living instanceof ZombifiedPiglin || living instanceof Piglin) && ignorePassiveMobs.get()) return;
+    private boolean entityCheck(Entity entity) {
+        if (!(entity instanceof LivingEntity living)) return false;
+
+        if (playerOnly.get() && !(living instanceof Player)) return false;
+
+        if (ignorePassiveMobs.get()) {
+            if (living instanceof Enderman && !((Enderman) living).isCreepy()) return false;
+
+            if ((living instanceof IronGolem
+                    || living instanceof ZombifiedPiglin
+                    || living instanceof Wolf
+                    || living instanceof Piglin)
+                    && !((PathfinderMob) living).isAggressive()) return false;
+        }
+
+        return true;
     }
 
     private void attack(LivingEntity entity) {
