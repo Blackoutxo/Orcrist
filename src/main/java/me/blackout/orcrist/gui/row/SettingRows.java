@@ -5,10 +5,7 @@
 
 package me.blackout.orcrist.gui.row;
 
-import me.blackout.orcrist.gui.row.settings.BoolRow;
-import me.blackout.orcrist.gui.row.settings.DoubleRow;
-import me.blackout.orcrist.gui.row.settings.EnumRow;
-import me.blackout.orcrist.gui.row.settings.KeybindRow;
+import me.blackout.orcrist.gui.row.settings.*;
 import me.blackout.orcrist.settings.*;
 import me.blackout.orcrist.systems.modules.Module;
 
@@ -39,6 +36,7 @@ public class SettingRows {
     private static SettingRow create(Setting<?> s) {
         if (s instanceof BoolSetting b) return new BoolRow(b);
         if (s instanceof DoubleSetting d) return new DoubleRow(d);
+        if (s instanceof IntSetting i) return new IntRow(i);
         if (s instanceof EnumSetting<?> e) return enumRow(e);
 
         return null;
