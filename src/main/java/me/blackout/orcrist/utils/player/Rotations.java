@@ -27,7 +27,7 @@ public class Rotations {
         return switch (part) {
             case HEAD -> new Vec3(cx, target.getEyeY(), cz);
             case BODY -> new Vec3(cx, (box.minY + box.maxY) / 2.0, cz);
-            case FEET -> new Vec3(cz, box.minY + 0.1, cz);
+            case FEET -> new Vec3(cx, box.minY + 0.1, cz);
             case NEAREST -> {
                 Vec3 eye = mc.player.getEyePosition();
                 yield new Vec3(Mth.clamp(eye.x, box.minX, box.maxX),
@@ -70,10 +70,6 @@ public class Rotations {
         return new Rotation(yaw, Math.clamp(pitch, -90f, 90f));
     }
 
-    public static Rotation rotateTo(Entity target) {
-        return rotateTo(target.getBoundingBox().getCenter());
-    }
-
     public static void look(Rotation r) {
         if (mc.player == null) return;
 
@@ -82,12 +78,17 @@ public class Rotations {
     }
 
     // Server side rotation
-    public static void rotate(Entity entity) {
-        Rotation rotation = rotateTo(entity);
+    public static void rotate(Entity target) {
+        if (mc.player == null) return;
+        Rotation r = rotateTo(target);
 
         mc.player.connection.send(new ServerboundMovePlayerPacket.Rot(
-                rotation.yaw, rotation.pitch,
+                r.yaw(), r.pitch(),
                 PlayerUtils.isOnGround(), mc.player.horizontalCollision
         ));
+    }
+
+    public static Rotation rotateTo(Entity target) {
+        return rotateTo(target.getBoundingBox().getCenter());
     }
 }
