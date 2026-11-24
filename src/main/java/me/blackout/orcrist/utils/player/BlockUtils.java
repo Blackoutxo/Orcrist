@@ -76,17 +76,21 @@ public class BlockUtils {
     }
 
     // Place
-    public static boolean place(BlockPos pos, double range, boolean throughWalls) {
-        return place(pos, range, throughWalls, true);
+    public static boolean place(BlockPos pos, FindItemResult item, double range, boolean throughWalls) {
+        return place(pos, item, range, throughWalls, true, true);
     }
 
-    public static boolean place(BlockPos pos, double range, boolean throughWalls, boolean swing) {
-        return place(pos, InteractionHand.MAIN_HAND, range, throughWalls, swing);
+    public static boolean place(BlockPos pos, FindItemResult item, double range, boolean throughWalls, boolean swing, boolean rotate) {
+        return place(pos, item, InteractionHand.MAIN_HAND, range, throughWalls, swing, rotate);
     }
 
-    public static boolean place(BlockPos pos, InteractionHand hand, double range, boolean throughWalls, boolean swing) {
+    public static boolean place(BlockPos pos, FindItemResult item, InteractionHand hand, double range, boolean throughWalls, boolean swing, boolean rotate) {
         Optional<BlockHitResult> result = getHitPlace(pos, range, throughWalls);
         if (result.isEmpty()) return false;
+
+        if (item.found()) InvUtils.setSlot(item.slot());
+
+        if (rotate) Rotations.rotateTo(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
 
         mc.gameMode.useItemOn(mc.player, hand, result.get());
 
@@ -119,16 +123,18 @@ public class BlockUtils {
 
     // Break
     public static boolean breakBlock(BlockPos pos, boolean swing) {
-        return breakBlock(pos, true, swing);
+        return breakBlock(pos, true, swing, true);
     }
 
-    public static boolean breakBlock(BlockPos pos, boolean throughWalls, boolean swing) {
-        return breakBlock(pos, mc.player.getAttributeBaseValue(Attributes.BLOCK_INTERACTION_RANGE), throughWalls, swing);
+    public static boolean breakBlock(BlockPos pos, boolean throughWalls, boolean swing, boolean rotate) {
+        return breakBlock(pos, mc.player.getAttributeBaseValue(Attributes.BLOCK_INTERACTION_RANGE), throughWalls, swing, rotate);
     }
 
-    public static boolean breakBlock(BlockPos pos, double range, boolean throughWalls, boolean swing) {
+    public static boolean breakBlock(BlockPos pos, double range, boolean throughWalls, boolean swing, boolean rotate) {
         Optional<Direction> dir = getBreakHit(pos, range, throughWalls);
         if (dir.isEmpty()) return false;
+
+        if (rotate) Rotations.rotateTo(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
 
         mc.gameMode.continueDestroyBlock(pos, dir.get());
 
@@ -163,6 +169,15 @@ public class BlockUtils {
     public static boolean hasNeighbour(BlockPos pos) {
         for (Direction dir : Direction.values()) {
             if (isSolid(pos.relative(dir))) return true;
+        }
+        return false;
+    }
+
+    public static boolean hasAirNeighbour(BlockPos pos, BlockPos exclude) {
+        for (Direction dir : Direction.values()) {
+            BlockPos neighbour = pos.relative(dir);
+            if (neighbour.equals(exclude)) continue;
+            if (isAir(neighbour)) return true;
         }
         return false;
     }
