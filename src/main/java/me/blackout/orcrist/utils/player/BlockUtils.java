@@ -90,7 +90,7 @@ public class BlockUtils {
 
         if (item.found()) InvUtils.setSlot(item.slot());
 
-        if (rotate) Rotations.rotateTo(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+        if (rotate) Rotations.rotate(result.get().getLocation());
 
         mc.gameMode.useItemOn(mc.player, hand, result.get());
 
@@ -113,12 +113,12 @@ public class BlockUtils {
 
             Direction face = dir.getOpposite();
             if (reach(neighbour) > range) continue;
-            if (!throughWalls && !canHitFace(pos, face)) continue;
+            if (!throughWalls && !canHitFace(neighbour, face)) continue;
 
-            candidates.add(new BlockHitResult(faceCenter(neighbour, face), face, pos, false));
+            candidates.add(new BlockHitResult(faceCenter(neighbour, face), face, neighbour, false));
         }
 
-        return candidates.stream().max(Comparator.comparingDouble(h -> h.getLocation().distanceToSqr(eye)));
+        return candidates.stream().min(Comparator.comparingDouble(h -> h.getLocation().distanceToSqr(eye)));
     }
 
     // Break
@@ -127,14 +127,14 @@ public class BlockUtils {
     }
 
     public static boolean breakBlock(BlockPos pos, boolean throughWalls, boolean swing, boolean rotate) {
-        return breakBlock(pos, mc.player.getAttributeBaseValue(Attributes.BLOCK_INTERACTION_RANGE), throughWalls, swing, rotate);
+        return breakBlock(pos, mc.player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE), throughWalls, swing, rotate);
     }
 
     public static boolean breakBlock(BlockPos pos, double range, boolean throughWalls, boolean swing, boolean rotate) {
         Optional<Direction> dir = getBreakHit(pos, range, throughWalls);
         if (dir.isEmpty()) return false;
 
-        if (rotate) Rotations.rotateTo(new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+        if (rotate) Rotations.rotate(faceCenter(pos, dir.get()));
 
         mc.gameMode.continueDestroyBlock(pos, dir.get());
 
