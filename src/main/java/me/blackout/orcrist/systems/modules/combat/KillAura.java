@@ -106,9 +106,6 @@ public class KillAura extends Module {
         super(Category.Combat, "Kill Aura", "Automatically kills entities nearby!");
     }
 
-    @Override
-    public void onActivate() {}
-
     @EventHandler
     private void onTick(TickEvent.Post event) {
         FindItemResult swords = InvUtils.find(item);
@@ -117,7 +114,7 @@ public class KillAura extends Module {
         if (mc.player == null || mc.level == null || target == null) return;
         if (weaponOnly.get() && !swords.isMainHand()) return;
 
-        if (weaponOnly.get() && autoSwitch.get() && swords.found()) {
+        if (weaponOnly.get() && autoSwitch.get()) {
             InvUtils.swapWithHotbar(swords.slot(), weaponSlot.get());
             InvUtils.setSlot(swords.slot());
         }
