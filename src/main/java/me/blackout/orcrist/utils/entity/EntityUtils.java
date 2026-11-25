@@ -5,9 +5,17 @@
 
 package me.blackout.orcrist.utils.entity;
 
+import me.blackout.orcrist.utils.player.BlockUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityUtils {
+    private static final Direction[] HORIZONTAL = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
 
     public static boolean isInLava(LivingEntity entity) {
         return entity.isInLava();
@@ -23,5 +31,22 @@ public class EntityUtils {
 
     public static boolean isLowHealth(LivingEntity entity, double threshold) {
         return (getTotalHealth(entity) <= threshold);
+    }
+
+    // City block
+    public static List<BlockPos> getCityBlock(Player player) {
+        List<BlockPos> cityPos = new ArrayList<>();
+        BlockPos leg = player.blockPosition();
+
+        for (Direction dir : HORIZONTAL) {
+            BlockPos pos = leg.relative(dir);
+
+            if (!BlockUtils.isBreakable(pos)) continue;
+            if (!BlockUtils.hasAirNeighbour(pos, leg)) continue;
+
+            cityPos.add(pos);
+        }
+
+        return cityPos;
     }
 }
