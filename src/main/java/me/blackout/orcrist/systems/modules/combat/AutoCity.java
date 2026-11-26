@@ -13,12 +13,16 @@ import me.blackout.orcrist.systems.modules.Module;
 import me.blackout.orcrist.utils.entity.EntityUtils;
 import me.blackout.orcrist.utils.entity.TargetPriority;
 import me.blackout.orcrist.utils.entity.TargetUtils;
-import me.blackout.orcrist.utils.player.BlockUtils;
+import me.blackout.orcrist.utils.player.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +119,8 @@ public class AutoCity extends Module {
             .build()
     );
 
+    private Item[] item = new Item[]{Items.NETHERITE_PICKAXE, Items.DIAMOND_PICKAXE};
+
     private Player target;
     private BlockPos blockPosTarget;
     private BlockPos targetPos;
@@ -131,11 +137,49 @@ public class AutoCity extends Module {
     }
 
     @Override
-    public void onActivate() {}
+    public void onActivate() {
+        initialToggle();
+    }
 
     @EventHandler
     private void onTick(TickEvent.Pre event) {
+        FindItemResult result = InvUtils.find(item);
+        timer++;
 
+        if (!result.found() && !result.isHotbar()) return;
+        max = (int) BlockUtils.getState(blockPosTarget).getBlock().getSpeedFactor();
+
+        int currentSlot = mc.player.getInventory().getSelectedSlot();
+        boolean isAir = BlockUtils.getState(blockPosTarget).isAir();
+
+        if (mode.get() == HitMode.Vanilla) {
+            InvUtils.setSlot(result.slot());
+
+            if (rotate.get()) Rotations.rotateTo(new Vec3(blockPosTarget.getX(), blockPosTarget.getY(), blockPosTarget.getZ()));
+        }
+
+        if (first) {
+            BlockUtils.breakBlock(blockPosTarget, true);
+            first = false;
+        }
+
+        if (mode.get() == HitMode.Instant) {
+            if (isAir) instCount++;
+            else {
+                instCount = 0;
+
+                if (timer >= max && currentSlot == result.slot()) {
+                    mc.player.connection.send(new ServerboundPlayerActionPacket(ServerboundPlayerActionPacket.Action.STOP_DESTROY_BLOCK, blockPosTarget, direction));
+
+                    if (swing.get()) PlayerUtils.swing();
+                }
+            }
+        }
+
+        if (target == null && timer >= max && PlayerUtils.distanceToPos(blockPosTarget) > breakRange.get()) {
+            if (selfToggle.get()) toggle();
+            else initialToggle();
+        }
     }
 
     private Player getTarget() {
@@ -147,7 +191,7 @@ public class AutoCity extends Module {
                 boolean noBlock = true;
                 BlockPos targetBlockPos = target.getOnPos();
 
-                for (BlockPos pos : EntityUtils.getCityBlock(target)) {
+                for (BlockPos pos : EntityUtils.getCityBlocks(target)) {
                     if (!BlockUtils.isAir(pos) && BlockUtils.getState(pos).getBlock() == Blocks.BEDROCK) noBlock = false;
                 }
 
@@ -157,12 +201,44 @@ public class AutoCity extends Module {
 
         if (targets.isEmpty()) return null;
         else {
-            targets.sort((e1, e2) -> TargetUtils.comparator(priority.get()));
+            targets.sort((e1, e2) -> TargetUtils.comparator(priority.get()).compare(e1, e2));
+            return targets.get(0);
         }
+    }
+
+    private void initialToggle() {
+        FindItemResult obsidian = InvUtils.find(Items.OBSIDIAN);
+        target = getTarget();
+
+        if (target == null) {
+            error("Target not found, disabling.");
+            toggle();
+            return;
+        }
+
+        blockPosTarget = EntityUtils.getCityBlock(target, breakRange.get(), throughWalls.get());
+
+        // BlockPos check
+        if (blockPosTarget == null) {
+            error("Can't find city block, disabling...");
+            toggle();
+            return;
+        }
+
+        if (support.get()) {
+            if (BlockUtils.getState(blockPosTarget.below()).getBlock() == Blocks.BEDROCK) return;
+            if (!obsidian.found()) return;
+            BlockUtils.place(blockPosTarget.below(), obsidian, targetRange.get(), throughWalls.get(), swing.get(), rotate.get());
+        }
+
+        first = true;
+        timer = 0;
+        instCount = 0;
     }
 
     private enum HitMode {
         Vanilla,
-        Packet
+        Instant,
+        Packet,
     }
 }
