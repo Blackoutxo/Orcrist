@@ -88,6 +88,16 @@ public class Rotations {
         ));
     }
 
+    public static void rotate(Vec3 pos) {
+        if (mc.player == null) return;
+        Rotation r = rotateTo(pos);
+
+        mc.player.connection.send(new ServerboundMovePlayerPacket.Rot(
+                r.yaw(), r.pitch(),
+                PlayerUtils.isOnGround(), mc.player.horizontalCollision
+        ));
+    }
+
     public static Rotation rotateTo(Entity target) {
         return rotateTo(target.getBoundingBox().getCenter());
     }
