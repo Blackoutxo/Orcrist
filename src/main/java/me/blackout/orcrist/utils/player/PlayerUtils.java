@@ -5,9 +5,14 @@
 
 package me.blackout.orcrist.utils.player;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.game.ServerboundPunchPacket;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -16,6 +21,15 @@ import net.minecraft.world.phys.Vec3;
 import static me.blackout.orcrist.Orcrist.mc;
 
 public class PlayerUtils {
+
+    // Render
+    public static void swing() {
+        ItemStack held = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
+        SwingAnimation anim = held.getAttackAnimation();
+
+        mc.player.swing(InteractionHand.MAIN_HAND, anim, false);
+        mc.player.connection.send(ServerboundPunchPacket.INSTANCE);
+    }
 
     // Health & survival
     public static boolean inLava() {
@@ -65,6 +79,15 @@ public class PlayerUtils {
         double dz = mc.player.getZ() - Mth.clamp(mc.player.getZ(), box.minZ, box.maxZ);
 
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    public static double distanceToPos(BlockPos pos) {
+        if (mc.player == null) return 0;
+
+        double xd = mc.player.getX() - pos.getX();
+        double yd = mc.player.getY() - pos.getY();
+        double zd = mc.player.getZ() - pos.getZ();
+        return Math.sqrt(xd * xd + yd * yd + zd * zd);
     }
 
     public static boolean canSee(Entity entity) {
