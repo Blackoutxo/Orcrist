@@ -63,7 +63,7 @@ public class WModuleList extends WScrollable {
         Renderer2D.quadWH(graphics, x, cardY + GuiValues.CARD_H, w, 2, new Color(24, 24, 24, 50));
         renderer.text(graphics, m.name, x + 5, cardY + 4, 10, GuiValues.TEXT);
 
-        Renderer2D.quadWH(graphics, x + w - 10, y, 10, GuiValues.CARD_H, GuiValues.CARD.darker());
+        Renderer2D.quadWH(graphics, x + w - 10, cardY, 10, GuiValues.CARD_H, GuiValues.CARD.darker());
         if (!m.getSettings().isEmpty()) drawDots(graphics, x + w - 4, cardY + 13);
     }
 
