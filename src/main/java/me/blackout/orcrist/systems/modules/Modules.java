@@ -8,6 +8,7 @@ package me.blackout.orcrist.systems.modules;
 import com.mojang.blaze3d.platform.InputConstants;
 import me.blackout.orcrist.eventBus.EventHandler;
 import me.blackout.orcrist.events.KeyInputEvent;
+import me.blackout.orcrist.systems.modules.combat.AutoCity;
 import me.blackout.orcrist.systems.modules.combat.KillAura;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class  Modules {
 
     // Combat
     private static void combat() {
+        add(new AutoCity());
         add(new KillAura());
     }
 
