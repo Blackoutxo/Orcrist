@@ -12,9 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
-import static me.blackout.orcrist.Orcrist.mc;
 
 public class EntityUtils {
     private static final Direction[] HORIZONTAL = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
@@ -52,12 +51,21 @@ public class EntityUtils {
         return cityPos;
     }
 
-    public static BlockPos getCityBlock(Player player, double range, boolean throughWalls) {
-        for (BlockPos pos : getCityBlocks(player)) {
-            if (!(mc.player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > range)) continue;
-            if (throughWalls && BlockUtils.canHitFace(pos, mc.player.getDirection())) return pos;
+    public static BlockPos getCity(Player player, double range, boolean throughWalls) {
+        BlockPos feet = player.blockPosition();
+        List<BlockPos> sides = new ArrayList<>();
+
+        for (Direction dir : HORIZONTAL) {
+            BlockPos pos = feet.relative(dir);
+            if (!BlockUtils.hasAirNeighbour(pos, feet)) continue;
+            if (BlockUtils.getBreakHit(pos, range, throughWalls).isPresent()) sides.add(pos);
         }
 
-        return player.getOnPos();
+        if (!sides.isEmpty()) {
+            sides.sort(Comparator.comparingDouble(BlockUtils::reach));
+            return sides.get(0);
+        }
+
+        return null;
     }
 }
